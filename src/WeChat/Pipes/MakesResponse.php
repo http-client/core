@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WeForge\WeChat\Pipes;
 
 use Symfony\Component\HttpFoundation\Response;

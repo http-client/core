@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WeForge\WeChat;
 
 use WeForge\Http\Client;

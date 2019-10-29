@@ -7,6 +7,7 @@ $finder = PhpCsFixer\Finder::create()
 return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
+        'declare_strict_types' => true,
         'phpdoc_summary' => false,
         'single_trait_insert_per_statement' => false,
         'ordered_imports' => true,

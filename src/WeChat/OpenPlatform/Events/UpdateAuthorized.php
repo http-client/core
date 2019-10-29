@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WeForge\WeChat\OpenPlatform\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;

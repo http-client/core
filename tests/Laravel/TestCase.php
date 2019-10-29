@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WeForge\Tests\Laravel;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;

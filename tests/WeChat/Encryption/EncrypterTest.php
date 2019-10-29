@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WeForge\Tests\WeChat\Encryption;
 
 use WeForge\Tests\TestCase;
