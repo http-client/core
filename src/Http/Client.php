@@ -44,10 +44,36 @@ class Client
      *
      * @return mixed
      */
-    public function get($uri, $query = [])
+    public function get(string $uri, array $query = [])
+    {
+        return $this->request('GET', $uri, ['query' => $query]);
+    }
+
+    /**
+     * Makes a post request.
+     *
+     * @param string $uri
+     *
+     * @return mixed
+     */
+    public function post(string $uri)
+    {
+        return $this->request('POST', $uri);
+    }
+
+    /**
+     * Makes an http request.
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array  $options
+     *
+     * @return mixed
+     */
+    public function request(string $method, string $uri = '', array $options = [])
     {
         return $this->castsResponse(
-            $this->getHttpClient()->request('GET', $uri, ['query' => $query])
+            $this->getHttpClient()->request($method, $uri, $options)
         );
     }
 

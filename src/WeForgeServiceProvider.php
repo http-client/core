@@ -23,6 +23,6 @@ class WeForgeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        WeForge::$runningInLaravel = true;
     }
 }

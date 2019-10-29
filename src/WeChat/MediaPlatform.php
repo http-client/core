@@ -3,8 +3,10 @@
 namespace WeForge\WeChat;
 
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use WeForge\Http\Client;
-use WeForge\WeChat\Http\Middleware\AttachAccessTokenQuery;
+use WeForge\WeChat\Http\Middleware\AddAccessTokenToQuery;
+use WeForge\WeChat\Http\Middleware\CredentialInvalidDecider;
 
 class MediaPlatform extends Client
 {
@@ -27,7 +29,11 @@ class MediaPlatform extends Client
         [$config] = $this->getOptions();
 
         $handlerStack->push(
-            new AttachAccessTokenQuery($this->baseUri, $config['app_id'], $config['secret'])
+            new AddAccessTokenToQuery($this->baseUri, $config['app_id'], $config['secret'])
         );
+
+        $handlerStack->push(Middleware::retry(
+            new CredentialInvalidDecider($this->baseUri, $config['app_id'], $config['secret'])
+        ));
     }
 }

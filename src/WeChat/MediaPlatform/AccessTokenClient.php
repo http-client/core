@@ -17,35 +17,61 @@ class AccessTokenClient extends Client
     protected $baseUri = 'https://api.weixin.qq.com';
 
     /**
+     * The date when access token expire.
+     *
+     * @var int
+     */
+    public static $tokenExpireAt = 7000;
+
+    /**
      * Retrieve token from cache or fresh token.
      *
      * @return array
      */
-    public function getToken()
+    public function getToken(): array
     {
-        [$appId, $appSecret] = $this->getOptions();
-
-        return $this->remember('weforge.wechat.media-platform.access-token.'.$appId, 7000, function () use ($appId, $appSecret) {
-            return $this->freshToken($appId, $appSecret);
+        return $this->remember($this->cacheKey(), static::$tokenExpireAt, function () {
+            return $this->requestToken();
         });
     }
 
     /**
-     * Fresh access-token from api.
-     *
-     * @param string $appId
-     * @param string $appSecret
+     * Remove cache and fresh token.
      *
      * @return array
      */
-    public function freshToken($appId, $appSecret)
+    public function freshToken(): array
     {
-        $response = $this->withoutResponseCasting(function () use ($appId, $appSecret) {
+        $this->getCache()->delete($this->cacheKey());
+
+        return $this->getToken();
+    }
+
+    /**
+     * Request access-token from api.
+     *
+     * @return array
+     */
+    public function requestToken(): array
+    {
+        $response = $this->withoutResponseCasting(function () {
+            [$appId, $appSecret] = $this->getOptions();
+
             return $this->get('cgi-bin/token', [
                 'grant_type' => 'client_credential', 'appid' => $appId, 'secret' => $appSecret,
             ]);
         });
 
         return $this->castsResponseToArray($response);
+    }
+
+    /**
+     * @return string
+     */
+    protected function cacheKey(): string
+    {
+        [$appId] = $this->getOptions();
+
+        return 'weforge.wechat.media-platform.access-token.'.md5($appId);
     }
 }

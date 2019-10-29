@@ -6,7 +6,7 @@ use Psr\Http\Message\RequestInterface;
 use WeForge\Http\Client;
 use WeForge\WeChat\MediaPlatform\AccessTokenClient;
 
-class AttachAccessTokenQuery
+class AddAccessTokenToQuery
 {
     /**
      * Base URI of the http client.
@@ -54,8 +54,10 @@ class AttachAccessTokenQuery
             }
 
             parse_str($request->getUri()->getQuery(), $query);
-            $query = http_build_query(array_merge(['access_token' => $this->getTokenString()], $query));
+            $query = http_build_query(array_merge(['access_token' => $t = $this->getTokenString()], $query));
             $request = $request->withUri($request->getUri()->withQuery($query));
+
+            dump('Applied token: '.$t);
 
             return $next($request, $options);
         };
