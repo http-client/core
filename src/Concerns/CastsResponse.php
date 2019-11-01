@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WeForge\Concerns;
 
 use Psr\Http\Message\ResponseInterface;
+use WeForge\Exceptions\ResponseCastingErrorException;
 
 trait CastsResponse
 {
@@ -17,7 +18,7 @@ trait CastsResponse
      */
     public function castsResponseToString(ResponseInterface $response): string
     {
-        $contents = $response->getBody()->getContents();
+        $contents = (string) $response->getBody();
         $response->getBody()->rewind();
 
         return $contents;
@@ -29,11 +30,20 @@ trait CastsResponse
      * @param \Psr\Http\Message\ResponseInterface $response
      *
      * @return array
+     *
+     * @throws \WeForge\Exceptions\ResponseCastingErrorException
      */
     public function castsResponseToArray(ResponseInterface $response): array
     {
-        return json_decode(
+        $decoded = json_decode(
             $this->castsResponseToString($response), true
         );
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded;
+        }
+
+        throw (new ResponseCastingErrorException(json_last_error_msg()))
+                ->withResponse($response);
     }
 }

@@ -8,13 +8,14 @@ trait ObservesHandler
 {
     /**
      * @param callable $handler
+     * @param array    $payload
      *
      * @return mixed
      */
     public function observe()
     {
-        [$handler, $args] = func_get_args();
+        [$handler, $payload] = func_get_args();
 
-        return call_user_func_array($handler, $args);
+        return call_user_func_array($handler, [$payload]);
     }
 }

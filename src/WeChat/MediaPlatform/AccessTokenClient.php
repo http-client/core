@@ -6,6 +6,7 @@ namespace WeForge\WeChat\MediaPlatform;
 
 use WeForge\Concerns;
 use WeForge\Http\Client;
+use WeForge\WeChat\Exceptions\ResponseWithErrorException;
 
 class AccessTokenClient extends Client
 {
@@ -21,9 +22,19 @@ class AccessTokenClient extends Client
     /**
      * The date when access token expire.
      *
-     * @var int
+     * @var \DateInterval|int
      */
     public static $tokenExpireAt = 7000;
+
+    /**
+     * @var callable|null
+     */
+    protected static $getTokenUsing;
+
+    /**
+     * @var callable|null
+     */
+    protected static $freshTokenUsing;
 
     /**
      * Retrieve token from cache or fresh token.
@@ -32,9 +43,13 @@ class AccessTokenClient extends Client
      */
     public function getToken(): array
     {
-        return $this->remember($this->cacheKey(), static::$tokenExpireAt, function () {
-            return $this->requestToken();
-        });
+        [$appId] = $this->getOptions();
+
+        return call_user_func(static::$getTokenUsing ?: function () {
+            return $this->remember($this->cacheKey(), static::$tokenExpireAt, function () {
+                return $this->requestToken();
+            });
+        }, $appId);
     }
 
     /**
@@ -44,9 +59,13 @@ class AccessTokenClient extends Client
      */
     public function freshToken(): array
     {
-        $this->getCache()->delete($this->cacheKey());
+        [$appId] = $this->getOptions();
 
-        return $this->getToken();
+        return call_user_func(static::$freshTokenUsing ?: function () {
+            $this->getCache()->delete($this->cacheKey());
+
+            return $this->getToken();
+        }, $appId);
     }
 
     /**
@@ -64,7 +83,37 @@ class AccessTokenClient extends Client
             ]);
         });
 
-        return $this->castsResponseToArray($response);
+        $result = $this->castsResponseToArray($response);
+
+        if (isset($result['errcode']) && ($result['errcode'] !== 0)) {
+            throw ResponseWithErrorException::withResult($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return static
+     */
+    public static function getTokenUsing(callable $callback)
+    {
+        static::$getTokenUsing = $callback;
+
+        return new static;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return static
+     */
+    public static function freshTokenUsing(callable $callback)
+    {
+        static::$freshTokenUsing = $callback;
+
+        return new static;
     }
 
     /**

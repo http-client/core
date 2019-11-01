@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace WeForge\WeChat\Encryption;
 
+use WeForge\Concerns\GeneratesRandomString;
+
 class Encrypter
 {
+    use GeneratesRandomString;
+
     /**
      * @var string
      */
@@ -44,7 +48,7 @@ class Encrypter
     public function encrypt($content)
     {
         $content = $this->pkcs7Encoder->encode(
-            $this->getRandomString().pack('N', strlen($content)).$content.$this->appId
+            $this->generateRandomString().pack('N', strlen($content)).$content.$this->appId
         );
 
         $value = openssl_encrypt(
@@ -103,20 +107,5 @@ class Encrypter
     protected function getInitializationVector()
     {
         return substr($this->aesKey, 0, 16);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRandomString(): string
-    {
-        $value = '';
-        $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-
-        for ($i = 0; $i < 16; ++$i) {
-            $value .= $pool[mt_rand(0, strlen($pool) - 1)];
-        }
-
-        return $value;
     }
 }

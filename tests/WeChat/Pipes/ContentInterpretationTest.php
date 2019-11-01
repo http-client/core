@@ -21,6 +21,20 @@ class ContentInterpretationTest extends TestCase
     public function testInvalidXml()
     {
         $this->expectException(InterpretException::class);
-        call_user_func(new ContentInterpretation, 'invalid');
+        call_user_func(new ContentInterpretation, '<i></o>');
+    }
+
+    public function testValidJson()
+    {
+        $result = call_user_func(new ContentInterpretation, '{"foo": "bar", "Hello": "World"}');
+
+        $this->assertTrue(is_array($result));
+        $this->assertSame(['foo' => 'bar', 'Hello' => 'World'], $result);
+    }
+
+    public function testInvalidJson()
+    {
+        $this->expectException(InterpretException::class);
+        call_user_func(new ContentInterpretation, '{"eee":eee}');
     }
 }

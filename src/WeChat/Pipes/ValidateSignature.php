@@ -14,50 +14,67 @@ class ValidateSignature
     protected $token;
 
     /**
-     * @var string
+     * The request query.
+     *
+     * @var array
      */
-    protected $signature;
-
-    /**
-     * @var string
-     */
-    protected $timestamp;
-
-    /**
-     * @var string
-     */
-    protected $nonce;
+    protected $query;
 
     /**
      * @param string $token
-     * @param string $signature
-     * @param string $timestamp
-     * @param string $nonce
+     * @param array  $query
      */
-    public function __construct(string $token, string $signature, string $timestamp, string $nonce)
+    public function __construct(string $token, array $query = [])
     {
         $this->token = $token;
-        $this->signature = $signature;
-        $this->timestamp = $timestamp;
-        $this->nonce = $nonce;
+        $this->query = $query;
     }
 
     /**
-     * @param string $content
+     * @param array $data
      *
-     * @return string
+     * @return array
      *
      * @throws \WeForge\WeChat\Exceptions\InvalidSignatureException
      */
-    public function __invoke(string $content): string
+    public function __invoke(array $data): array
     {
-        $attributes = [$content, $this->token, $this->timestamp, $this->nonce];
-        sort($attributes, SORT_STRING);
+        $attributes = [$this->token, $this->query['timestamp'], $this->query['nonce']];
 
-        if ($this->signature !== sha1(implode($attributes))) {
-            throw new InvalidSignatureException;
+        if ($this->isEncrypted()) {
+            array_push($attributes, $data['Encrypt']);
+            $this->validate($attributes, $this->query['msg_signature']);
+        } else {
+            $this->validate($attributes, $this->query['signature']);
         }
 
-        return $content;
+        return $data;
+    }
+
+    /**
+     * Validate the signature
+     *
+     * @param array  $attributes
+     * @param string $signature
+     *
+     * @return void
+     *
+     * @throws \WeForge\WeChat\Exceptions\InvalidSignatureException
+     */
+    protected function validate(array $attributes, string $signature): void
+    {
+        sort($attributes, SORT_STRING);
+
+        if ($signature !== sha1(implode($attributes))) {
+            throw new InvalidSignatureException;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEncrypted()
+    {
+        return isset($this->query['encrypt_type']);
     }
 }

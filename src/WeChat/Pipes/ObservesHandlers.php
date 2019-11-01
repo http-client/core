@@ -6,11 +6,12 @@ namespace WeForge\WeChat\Pipes;
 
 use Symfony\Component\HttpFoundation\Response;
 use WeForge\Concerns\ObservesHandler;
+use WeForge\WeChat\Concerns\ConcatenatesResponseMessage;
 use WeForge\WeChat\Decorators\FinallyResult;
 
-class MakesResponse
+class ObservesHandlers
 {
-    use ObservesHandler;
+    use ObservesHandler, ConcatenatesResponseMessage;
 
     /**
      * @var array
@@ -28,38 +29,26 @@ class MakesResponse
     /**
      * @param array $payload
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return mixed
      */
-    public function __invoke(array $payload): Response
+    public function __invoke(array $payload)
     {
         $results = array_map(function ($handler) use ($payload) {
             return $this->observe($handler, $payload);
         }, $this->handlers);
 
-        return new Response(
-            $this->getFinallyResult($results)
-        );
-    }
-
-    /**
-     * Get the finally response.
-     *
-     * @param mixed $results
-     *
-     * @return string
-     */
-    protected function getFinallyResult($results): string
-    {
         foreach ($results as $result) {
             if ($result instanceof FinallyResult) {
-                return $result->content;
+                return $result;
             }
 
-            if (is_string($result)) {
+            if (is_scalar($result)) {
+                return $this->concatReplyMessage($payload['FromUserName'], $payload['ToUserName'], $result);
+            }
+
+            if ($result instanceof Response) {
                 return $result;
             }
         }
-
-        return '';
     }
 }

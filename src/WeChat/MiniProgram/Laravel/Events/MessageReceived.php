@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform\Events;
+namespace WeForge\WeChat\MiniProgram\Laravel\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Authorized
+class MessageReceived
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -21,8 +21,6 @@ class Authorized
      * Create a new event instance.
      *
      * @param array $payload
-     *
-     * @return void
      */
     public function __construct(array $payload)
     {

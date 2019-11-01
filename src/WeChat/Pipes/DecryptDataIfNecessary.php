@@ -39,10 +39,10 @@ class DecryptDataIfNecessary
      */
     public function __invoke(array $data): array
     {
-        $encrypter = new Encrypter($this->appId, $this->aesKey);
-
         if (isset($data['Encrypt'])) {
-            $encrypter->decrypt($data['Encrypt']);
+            return call_user_func(
+                new ContentInterpretation, (new Encrypter($this->appId, $this->aesKey))->decrypt($data['Encrypt'])
+            );
         }
 
         return $data;

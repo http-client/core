@@ -7,7 +7,7 @@ namespace WeForge\Support;
 use Closure;
 use SimpleXMLElement;
 
-class XML
+class XMLLoader
 {
     /**
      * @var array|null

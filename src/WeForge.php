@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace WeForge;
 
+use WeForge\Integrations\IntegratesWithLaravel;
+
 class WeForge
 {
-    /**
-     * Determine whether WeForge is running in Laravel framework.
-     *
-     * @var bool
-     */
-    public static $runningInLaravel = false;
+    use IntegratesWithLaravel;
 
     /**
      * @var callable
      */
     public static $resolveCacheUsing;
+
+    /**
+     * @var callable
+     */
+    public static $resolveLoggerUsing;
 
     /**
      * @param callable $callback
@@ -25,7 +27,19 @@ class WeForge
      */
     public static function resolveCacheUsing(callable $callback)
     {
-        static::$resolveCacheUsing = $callable;
+        static::$resolveCacheUsing = $callback;
+
+        return new static;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return static
+     */
+    public static function resolveLoggerUsing(callable $callback)
+    {
+        static::$resolveLoggerUsing = $callback;
 
         return new static;
     }

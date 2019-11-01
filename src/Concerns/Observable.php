@@ -16,7 +16,7 @@ trait Observable
      *
      * @return void
      */
-    public function push($callback)
+    public function push(callable $callback)
     {
         array_push($this->handlers, $callback);
     }
@@ -27,7 +27,7 @@ trait Observable
      *
      * @return void
      */
-    public function pushWhen($condition, $callback)
+    public function pushWhen($condition, callable $callback)
     {
         if ($condition) {
             $this->push($callback);
@@ -39,7 +39,7 @@ trait Observable
      *
      * @return array
      */
-    public function handlers()
+    public function handlers(): array
     {
         return $this->handlers;
     }

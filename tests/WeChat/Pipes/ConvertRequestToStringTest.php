@@ -18,4 +18,12 @@ class ConvertRequestToStringTest extends TestCase
         $this->assertTrue(is_string($result));
         $this->assertSame('hello', $result);
     }
+
+    public function testEmpty()
+    {
+        $result = call_user_func(new ConvertRequestToString, new Request);
+
+        $this->assertTrue(is_string($result));
+        $this->assertSame('', $result);
+    }
 }

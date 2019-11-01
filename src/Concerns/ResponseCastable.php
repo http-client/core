@@ -49,14 +49,14 @@ trait ResponseCastable
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function withoutResponseCasting($callback)
+    public function withoutResponseCasting($callback): ResponseInterface
     {
-        $backup = $this->withResponseCasting;
+        $previous = $this->withResponseCasting;
         $this->withResponseCasting = false;
 
-        $response = $callback();
+        $response = $callback($this);
 
-        $this->withResponseCasting = $backup;
+        $this->withResponseCasting = $previous;
 
         return $response;
     }

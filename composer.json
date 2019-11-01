@@ -11,21 +11,24 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
+        "ext-json": "*",
         "ext-openssl": "*",
         "guzzlehttp/guzzle": "^6.4",
         "league/pipeline": "^1.0",
+        "monolog/monolog": "^1.12 || ^2.0",
         "symfony/cache": "^4.3",
         "symfony/http-foundation": "^4.3"
     },
     "require-dev": {
+        "laravel/lumen-framework": "^6.0",
         "orchestra/testbench": "^4.3",
-        "phpunit/phpunit": "^8.4"
+        "phpunit/phpunit": "dev-master"
     },
     "extra": {
         "laravel": {
             "providers": [
-                "WeForge\\WeForgeServiceProvider"
+                "WeForge\\Integrations\\Laravel\\WeForgeServiceProvider"
             ]
         }
     },

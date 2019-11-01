@@ -50,18 +50,18 @@ trait InteractsWithCache
 
     /**
      * @param string   $key
-     * @param int      $seconds
+     * @param int      $ttl
      * @param \Closure $callback
      *
      * @return mixed
      */
-    public function remember($key, $seconds, $callback)
+    public function remember($key, $ttl, $callback)
     {
         if ($this->getCache()->has($key)) {
             return $this->getCache()->get($key);
         }
 
-        $this->getCache()->set($key, $callback(), $seconds);
+        $this->getCache()->set($key, $callback(), $ttl);
 
         return $this->getCache()->get($key);
     }

@@ -7,7 +7,11 @@ namespace WeForge\Http;
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
+use Psr\Log\LogLevel;
 use WeForge\Concerns\ResponseCastable;
+use WeForge\Support\Logger;
 
 class Client
 {
@@ -55,12 +59,13 @@ class Client
      * Makes a post request.
      *
      * @param string $uri
+     * @param array  $json
      *
      * @return mixed
      */
-    public function post(string $uri)
+    public function post(string $uri, array $json = [])
     {
-        return $this->request('POST', $uri);
+        return $this->request('POST', $uri, ['json' => $json]);
     }
 
     /**
@@ -91,6 +96,26 @@ class Client
     }
 
     /**
+     * @param string $uri
+     *
+     * @return $this
+     */
+    public function setBaseUri($uri)
+    {
+        $this->baseUri = $uri;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      * @return \GuzzleHttp\HandlerStack
      */
     protected function getHandlerStack(): HandlerStack
@@ -111,26 +136,8 @@ class Client
      */
     protected function apply(HandlerStack $handlerStack)
     {
-        //
-    }
-
-    /**
-     * @param string $uri
-     *
-     * @return $this
-     */
-    public function setBaseUri($uri)
-    {
-        $this->baseUri = $uri;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
+        $handlerStack->push(
+            Middleware::log(new Logger, new MessageFormatter(MessageFormatter::DEBUG), LogLevel::DEBUG)
+        );
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WeForge\Tests\WeChat\Encryption;
 
 use WeForge\Tests\TestCase;
+use WeForge\WeChat\Encryption\DecryptException;
 use WeForge\WeChat\Encryption\Encrypter;
 
 class EncrypterTest extends TestCase
@@ -15,6 +16,12 @@ class EncrypterTest extends TestCase
         $result = $this->getEncrypter()->encrypt($xml);
 
         $this->assertSame($xml, $this->getEncrypter()->decrypt($result));
+    }
+
+    public function testDecryptException()
+    {
+        $this->expectException(DecryptException::class);
+        $this->getEncrypter()->decrypt('invalid');
     }
 
     protected function getEncrypter()

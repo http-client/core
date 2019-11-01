@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace WeForge;
+namespace WeForge\Integrations\Laravel;
 
 use Illuminate\Support\ServiceProvider;
+use WeForge\WeForge;
 
 class WeForgeServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,9 @@ class WeForgeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__.'/config.php', 'weforge'
+        );
     }
 
     /**

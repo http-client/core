@@ -6,6 +6,7 @@ namespace WeForge\WeChat\MediaPlatform;
 
 use League\Pipeline\PipelineBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use WeForge\Concerns\Observable;
 use WeForge\WeChat\Decorators\FinallyResult;
 use WeForge\WeChat\Pipes as WeChatPipes;
@@ -33,27 +34,30 @@ class Server
         $this->config = $config;
         $this->request = $request ?: Request::createFromGlobals();
 
-        $this->pushWhen($this->request->isMethod('GET') && $this->request->get('echostr'), function () {
-            return new FinallyResult($this->request->get('echostr'));
+        $this->pushWhen($this->request->query->has('echostr'), function () {
+            return new FinallyResult($this->request->query->get('echostr'));
         });
     }
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function resolve()
+    public function resolve(): Response
     {
         return (new PipelineBuilder)
             ->add(new WeChatPipes\ConvertRequestToString)
-            ->add(new WeChatPipes\ValidateSignature(
-                $this->config['token'], $this->request->get('signature'), $this->request->get('timestamp'), $this->request->get('nonce')
-            ))
             ->add(new WeChatPipes\ContentInterpretation)
+            ->add(new WeChatPipes\ValidateSignature(
+                $this->config['token'], $this->request->query->all()
+            ))
             ->add(new WeChatPipes\DecryptDataIfNecessary(
                 $this->config['app_id'], $this->config['aes_key'] ?? null
             ))
             ->add(new Pipes\DispatchEvents)
-            ->add(new WeChatPipes\MakesResponse($this->handlers()))
+            ->add(new WeChatPipes\ObservesHandlers($this->handlers()))
+            ->add(new WeChatPipes\MakeResponse(
+                $this->config['app_id'], $this->config['aes_key'] ?? null, $this->request->query->has('encrypt_type')
+            ))
             ->build()
             ->process($this->request);
     }

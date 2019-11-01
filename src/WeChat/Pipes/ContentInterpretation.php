@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WeForge\WeChat\Pipes;
 
-use WeForge\Support\XML;
+use WeForge\Support\XMLLoader;
 use WeForge\WeChat\Exceptions\InterpretException;
 
 class ContentInterpretation
@@ -22,10 +22,14 @@ class ContentInterpretation
             return [];
         }
 
-        $parser = XML::load($content, null, LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS);
+        $parser = XMLLoader::load($content, null, LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS);
 
         if ($parser->isOk()) {
             return json_decode(json_encode($parser->result()), true);
+        }
+
+        if (is_array($result = json_decode($content, true))) {
+            return $result;
         }
 
         throw new InterpretException;
