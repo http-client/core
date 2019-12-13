@@ -44,8 +44,6 @@ class AddComponentAccessTokenToQuery extends MergeQuery
 
     /**
      * Merges query to the request.
-     *
-     * @return array
      */
     protected function getQuery(): array
     {

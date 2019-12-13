@@ -8,11 +8,6 @@ use WeForge\WeChat\OpenPlatform\ComponentVerifyTicketCache;
 
 class StoreVerifyTicket
 {
-    /**
-     * @param array $payload
-     *
-     * @return void
-     */
     public function __invoke(array $payload): void
     {
         if ($payload['InfoType'] !== 'component_verify_ticket') {

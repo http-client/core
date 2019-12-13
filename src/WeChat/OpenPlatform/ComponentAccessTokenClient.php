@@ -36,8 +36,6 @@ class ComponentAccessTokenClient extends Client
 
     /**
      * Retrieve token from cache or fresh token.
-     *
-     * @return array
      */
     public function getToken(): array
     {
@@ -52,8 +50,6 @@ class ComponentAccessTokenClient extends Client
 
     /**
      * Remove cache and fresh token.
-     *
-     * @return array
      */
     public function freshToken(): array
     {
@@ -64,8 +60,6 @@ class ComponentAccessTokenClient extends Client
 
     /**
      * Request access-token from api.
-     *
-     * @return array
      */
     public function requestToken(): array
     {

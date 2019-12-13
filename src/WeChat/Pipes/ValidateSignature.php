@@ -20,10 +20,6 @@ class ValidateSignature
      */
     protected $query;
 
-    /**
-     * @param string $token
-     * @param array  $query
-     */
     public function __construct(string $token, array $query = [])
     {
         $this->token = $token;
@@ -31,10 +27,6 @@ class ValidateSignature
     }
 
     /**
-     * @param array $data
-     *
-     * @return array
-     *
      * @throws \WeForge\WeChat\Exceptions\InvalidSignatureException
      */
     public function __invoke(array $data): array
@@ -53,11 +45,6 @@ class ValidateSignature
 
     /**
      * Validate the signature
-     *
-     * @param array  $attributes
-     * @param string $signature
-     *
-     * @return void
      *
      * @throws \WeForge\WeChat\Exceptions\InvalidSignatureException
      */

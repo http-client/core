@@ -9,8 +9,6 @@ use RuntimeException;
 class ResponseWithErrorException extends RuntimeException
 {
     /**
-     * @param array $result
-     *
      * @return static
      */
     public static function withResult(array $result)

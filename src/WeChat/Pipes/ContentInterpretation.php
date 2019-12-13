@@ -10,10 +10,6 @@ use WeForge\WeChat\Exceptions\InterpretException;
 class ContentInterpretation
 {
     /**
-     * @param string $content
-     *
-     * @return array
-     *
      * @throws \WeForge\WeChat\Exceptions\InterpretException
      */
     public function __invoke(string $content): array

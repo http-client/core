@@ -28,8 +28,7 @@ class Encrypter
     /**
      * Encrypter constructor.
      *
-     * @param string $appId
-     * @param null   $aesKey
+     * @param null $aesKey
      */
     public function __construct(string $appId, $aesKey = null)
     {

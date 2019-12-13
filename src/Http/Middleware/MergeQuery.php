@@ -9,8 +9,6 @@ use Psr\Http\Message\RequestInterface;
 class MergeQuery
 {
     /**
-     * @param callable $next
-     *
      * @return callable
      */
     public function __invoke(callable $next)
@@ -33,8 +31,6 @@ class MergeQuery
      *
      * @param \Psr\Http\Message\RequestInterface $request
      * @param array                              $options
-     *
-     * @return bool
      */
     protected function shouldSkipMiddleware($request, $options): bool
     {
@@ -43,8 +39,6 @@ class MergeQuery
 
     /**
      * Merges query to the request.
-     *
-     * @return array
      */
     protected function getQuery(): array
     {

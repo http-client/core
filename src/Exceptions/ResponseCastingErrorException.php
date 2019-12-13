@@ -15,8 +15,6 @@ class ResponseCastingErrorException extends Exception
     protected $response;
 
     /**
-     * @param \Psr\Http\Message\ResponseInterface $response
-     *
      * @return $this
      */
     public function withResponse(ResponseInterface $response): self
@@ -26,9 +24,6 @@ class ResponseCastingErrorException extends Exception
         return $this;
     }
 
-    /**
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
     public function getResponse(): ?ResponseInterface
     {
         return $this->response;

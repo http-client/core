@@ -12,8 +12,6 @@ trait Observable
     protected $handlers = [];
 
     /**
-     * @param callable $callback
-     *
      * @return void
      */
     public function push(callable $callback)
@@ -22,8 +20,7 @@ trait Observable
     }
 
     /**
-     * @param bool     $condition
-     * @param callable $callback
+     * @param bool $condition
      *
      * @return void
      */
@@ -36,8 +33,6 @@ trait Observable
 
     /**
      * Return all of the handlers.
-     *
-     * @return array
      */
     public function handlers(): array
     {

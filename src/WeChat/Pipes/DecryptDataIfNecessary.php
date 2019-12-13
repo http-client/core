@@ -20,9 +20,6 @@ class DecryptDataIfNecessary
 
     /**
      * DecryptDataIfNecessary constructor.
-     *
-     * @param string      $appId
-     * @param string|null $aesKey
      */
     public function __construct(string $appId, string $aesKey = null)
     {
@@ -32,10 +29,6 @@ class DecryptDataIfNecessary
 
     /**
      * Decrypt and replace to the original array if necessary.
-     *
-     * @param array $data
-     *
-     * @return array
      */
     public function __invoke(array $data): array
     {

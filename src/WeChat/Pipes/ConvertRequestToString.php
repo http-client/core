@@ -10,10 +10,6 @@ class ConvertRequestToString
 {
     /**
      * Converts request object to string.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return string
      */
     public function __invoke(Request $request): string
     {

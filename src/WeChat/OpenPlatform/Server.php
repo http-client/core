@@ -25,10 +25,6 @@ class Server
      */
     protected $request;
 
-    /**
-     * @param array                                          $config
-     * @param \Symfony\Component\HttpFoundation\Request|null $request
-     */
     public function __construct(array $config = [], Request $request = null)
     {
         $this->config = $config;
@@ -37,9 +33,6 @@ class Server
         $this->push(new StoreVerifyTicket);
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function resolve(): Response
     {
         return (new PipelineBuilder)

@@ -23,8 +23,6 @@ class MediaPlatform extends Client
     /**
      * Apply to handler stack.
      *
-     * @param \GuzzleHttp\HandlerStack $handlerStack
-     *
      * @return void
      */
     protected function apply(HandlerStack $handlerStack)

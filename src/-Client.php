@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace WeForge;
+namespace WeClient;
 
-use WeForge\Integrations\IntegratesWithLaravel;
+// use WeForge\Integrations\IntegratesWithLaravel;
 
-class WeForge
+class Clientxxx
 {
-    use IntegratesWithLaravel;
+    // use IntegratesWithLaravel;
 
     /**
      * @var callable
@@ -21,8 +21,6 @@ class WeForge
     public static $resolveLoggerUsing;
 
     /**
-     * @param callable $callback
-     *
      * @return static
      */
     public static function resolveCacheUsing(callable $callback)
@@ -33,8 +31,6 @@ class WeForge
     }
 
     /**
-     * @param callable $callback
-     *
      * @return static
      */
     public static function resolveLoggerUsing(callable $callback)

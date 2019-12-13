@@ -1,8 +1,8 @@
 {
-    "name": "weforge/weforge",
-    "description": "WeForge",
+    "name": "mingyoung/client",
+    "description": "Http Clinet for API requests.",
     "keywords": [
-        "wechat"
+        "wechat", "aliyun"
     ],
     "authors": [
         {
@@ -17,29 +17,27 @@
         "guzzlehttp/guzzle": "^6.4",
         "league/pipeline": "^1.0",
         "monolog/monolog": "^1.12 || ^2.0",
-        "symfony/cache": "^4.3",
-        "symfony/http-foundation": "^4.3"
+        "symfony/cache": "^4.3 || ^5.0",
+        "symfony/http-foundation": "^4.3 || ^5.0"
     },
     "require-dev": {
         "laravel/lumen-framework": "^6.0",
         "orchestra/testbench": "^4.3",
-        "phpunit/phpunit": "dev-master"
+        "phpunit/phpunit": "^8.4"
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "WeForge\\Integrations\\Laravel\\WeForgeServiceProvider"
-            ]
+            "providers": []
         }
     },
     "autoload": {
         "psr-4": {
-            "WeForge\\": "src/"
+            "WeClient\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "WeForge\\Tests\\": "tests/"
+            "WeClient\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",

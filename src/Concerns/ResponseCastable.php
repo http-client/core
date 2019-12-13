@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Concerns;
+namespace WeClient\Concerns;
 
 use Psr\Http\Message\ResponseInterface;
 
@@ -31,8 +31,6 @@ trait ResponseCastable
     }
 
     /**
-     * @param \Psr\Http\Message\ResponseInterface $response
-     *
      * @return mixed
      */
     public function castsResponse(ResponseInterface $response)
@@ -46,8 +44,6 @@ trait ResponseCastable
 
     /**
      * @param callable $callback
-     *
-     * @return \Psr\Http\Message\ResponseInterface
      */
     public function withoutResponseCasting($callback): ResponseInterface
     {

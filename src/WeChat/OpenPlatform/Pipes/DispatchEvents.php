@@ -12,8 +12,6 @@ class DispatchEvents
     /**
      * Dispatches events.
      *
-     * @param array $payload
-     *
      * @return array
      */
     public function __invoke(array $payload)
@@ -25,11 +23,6 @@ class DispatchEvents
         return $payload;
     }
 
-    /**
-     * @param array $payload
-     *
-     * @return void
-     */
     protected function dispatchLaravelEvents(array $payload): void
     {
         Events\EventReceived::dispatch($payload);

@@ -6,11 +6,6 @@ namespace WeForge\Concerns;
 
 trait GeneratesRandomString
 {
-    /**
-     * @param int $length
-     *
-     * @return string
-     */
     protected function generateRandomString(int $length = 16): string
     {
         $value = '';

@@ -38,8 +38,6 @@ class AccessTokenClient extends Client
 
     /**
      * Retrieve token from cache or fresh token.
-     *
-     * @return array
      */
     public function getToken(): array
     {
@@ -54,8 +52,6 @@ class AccessTokenClient extends Client
 
     /**
      * Remove cache and fresh token.
-     *
-     * @return array
      */
     public function freshToken(): array
     {
@@ -70,8 +66,6 @@ class AccessTokenClient extends Client
 
     /**
      * Request access-token from api.
-     *
-     * @return array
      */
     public function requestToken(): array
     {
@@ -93,8 +87,6 @@ class AccessTokenClient extends Client
     }
 
     /**
-     * @param callable $callback
-     *
      * @return static
      */
     public static function getTokenUsing(callable $callback)
@@ -105,8 +97,6 @@ class AccessTokenClient extends Client
     }
 
     /**
-     * @param callable $callback
-     *
      * @return static
      */
     public static function freshTokenUsing(callable $callback)
@@ -116,9 +106,6 @@ class AccessTokenClient extends Client
         return new static;
     }
 
-    /**
-     * @return string
-     */
     protected function cacheKey(): string
     {
         [$appId] = $this->getOptions();

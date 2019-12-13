@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Http;
+namespace WeClient;
 
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\ClientInterface;
@@ -10,7 +10,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use Psr\Log\LogLevel;
-use WeForge\Concerns\ResponseCastable;
+use WeClient\Concerns\ResponseCastable;
 use WeForge\Support\Logger;
 
 class Client
@@ -45,9 +45,6 @@ class Client
     /**
      * Makes a get request.
      *
-     * @param string $uri
-     * @param array  $query
-     *
      * @return mixed
      */
     public function get(string $uri, array $query = [])
@@ -58,9 +55,6 @@ class Client
     /**
      * Makes a post request.
      *
-     * @param string $uri
-     * @param array  $json
-     *
      * @return mixed
      */
     public function post(string $uri, array $json = [])
@@ -70,10 +64,6 @@ class Client
 
     /**
      * Makes an http request.
-     *
-     * @param string $method
-     * @param string $uri
-     * @param array  $options
      *
      * @return mixed
      */
@@ -89,10 +79,10 @@ class Client
      */
     public function getHttpClient(): ClientInterface
     {
-        return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
+        return $this->httpClient ?: $this->httpClient = new GuzzleHttp(array_merge([
             'base_uri' => $this->baseUri,
             'handler' => $this->getHandlerStack(),
-        ]);
+        ], $this->config()));
     }
 
     /**
@@ -107,6 +97,11 @@ class Client
         return $this;
     }
 
+    public function getBaseUri()
+    {
+        return $this->baseUri;
+    }
+
     /**
      * @return array
      */
@@ -115,9 +110,6 @@ class Client
         return $this->options;
     }
 
-    /**
-     * @return \GuzzleHttp\HandlerStack
-     */
     protected function getHandlerStack(): HandlerStack
     {
         $stack = HandlerStack::create();
@@ -130,14 +122,20 @@ class Client
     /**
      * Apply to handler stack.
      *
-     * @param \GuzzleHttp\HandlerStack $handlerStack
-     *
      * @return void
      */
-    protected function apply(HandlerStack $handlerStack)
+    protected function apply(HandlerStack $stack)
     {
-        $handlerStack->push(
-            Middleware::log(new Logger, new MessageFormatter(MessageFormatter::DEBUG), LogLevel::DEBUG)
-        );
+        // $stack->push(
+        //     Middleware::log(new Logger, new MessageFormatter(MessageFormatter::DEBUG), LogLevel::DEBUG)
+        // );
+    }
+
+    /**
+     * @return array
+     */
+    protected function config()
+    {
+        return [];
     }
 }

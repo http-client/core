@@ -26,12 +26,7 @@ class CredentialInvalidDecider
     protected $retryCodes = [40001, 40014, 42001];
 
     /**
-     * @param int                                      $retries
-     * @param \Psr\Http\Message\RequestInterface       $request
-     * @param \Psr\Http\Message\ResponseInterface|null $response
-     * @param Exception                                $exception
-     *
-     * @return bool
+     * @param Exception $exception
      */
     public function __invoke(int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool
     {
@@ -42,20 +37,12 @@ class CredentialInvalidDecider
 
     /**
      * The max retries count.
-     *
-     * @return int
      */
     protected function maxRetries(): int
     {
         return 3;
     }
 
-    /**
-     * @param \Psr\Http\Message\RequestInterface       $request
-     * @param \Psr\Http\Message\ResponseInterface|null $response
-     *
-     * @return bool
-     */
     protected function retryable(RequestInterface $request, ResponseInterface $response = null): bool
     {
         $array = $this->castsResponseToArray($response);

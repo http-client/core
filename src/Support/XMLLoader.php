@@ -32,8 +32,6 @@ class XMLLoader
     }
 
     /**
-     * @param \Closure $callback
-     *
      * @return $this
      */
     protected function withSimpleXmlLoadStringErrorHandling(Closure $callback)
@@ -48,8 +46,6 @@ class XMLLoader
 
     /**
      * Disable the ability to load external entities.
-     *
-     * @param \Closure $callback
      *
      * @return $this
      */
@@ -74,8 +70,6 @@ class XMLLoader
 
     /**
      * Get the parsed result.
-     *
-     * @return \SimpleXMLElement
      */
     public function result(): SimpleXMLElement
     {

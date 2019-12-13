@@ -16,17 +16,11 @@ trait InteractsWithCache
      */
     protected $cache;
 
-    /**
-     * @return \Psr\SimpleCache\CacheInterface
-     */
     public function getCache(): CacheInterface
     {
         return $this->cache ?: $this->cache = $this->resolveCache();
     }
 
-    /**
-     * @param \Psr\SimpleCache\CacheInterface $cache
-     */
     public function setCache(CacheInterface $cache)
     {
         $this->cache = $cache;
@@ -34,9 +28,6 @@ trait InteractsWithCache
         return $this;
     }
 
-    /**
-     * @return \Psr\SimpleCache\CacheInterface
-     */
     protected function resolveCache(): CacheInterface
     {
         if (WeForge::$resolveCacheUsing) {

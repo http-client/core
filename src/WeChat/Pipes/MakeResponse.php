@@ -28,11 +28,6 @@ class MakeResponse
      */
     protected $needsEncrypt;
 
-    /**
-     * @param string      $appId
-     * @param string|null $aesKey
-     * @param bool        $needsEncrypt
-     */
     public function __construct(string $appId, string $aesKey = null, bool $needsEncrypt = true)
     {
         $this->appId = $appId;
@@ -44,8 +39,6 @@ class MakeResponse
      * Generates response.
      *
      * @param mixed $message
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function __invoke($message): Response
     {

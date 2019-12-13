@@ -19,7 +19,6 @@ class Logger implements LoggerInterface
      * System is unusable.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -35,7 +34,6 @@ class Logger implements LoggerInterface
      * trigger the SMS alerts and wake you up.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -50,7 +48,6 @@ class Logger implements LoggerInterface
      * Example: Application component unavailable, unexpected exception.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -64,7 +61,6 @@ class Logger implements LoggerInterface
      * be logged and monitored.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -80,7 +76,6 @@ class Logger implements LoggerInterface
      * that are not necessarily wrong.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -93,7 +88,6 @@ class Logger implements LoggerInterface
      * Normal but significant events.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -108,7 +102,6 @@ class Logger implements LoggerInterface
      * Example: User logs in, SQL logs.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -121,7 +114,6 @@ class Logger implements LoggerInterface
      * Detailed debug information.
      *
      * @param string $message
-     * @param array  $context
      *
      * @return void
      */
@@ -135,7 +127,6 @@ class Logger implements LoggerInterface
      *
      * @param mixed  $level
      * @param string $message
-     * @param array  $context
      *
      * @return void
      *
@@ -148,8 +139,6 @@ class Logger implements LoggerInterface
 
     /**
      * Resolve logger
-     *
-     * @return \Psr\Log\LoggerInterface
      */
     public function logger(): LoggerInterface
     {

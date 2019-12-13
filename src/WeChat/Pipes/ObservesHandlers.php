@@ -18,17 +18,12 @@ class ObservesHandlers
      */
     protected $handlers;
 
-    /**
-     * @param array $handlers
-     */
     public function __construct(array $handlers)
     {
         $this->handlers = $handlers;
     }
 
     /**
-     * @param array $payload
-     *
      * @return mixed
      */
     public function __invoke(array $payload)

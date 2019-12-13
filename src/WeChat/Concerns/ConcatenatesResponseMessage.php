@@ -7,11 +7,7 @@ namespace WeForge\WeChat\Concerns;
 trait ConcatenatesResponseMessage
 {
     /**
-     * @param string                                      $to
-     * @param string                                      $from
      * @param string|int|\WeForge\WeChat\Messages\Message $message
-     *
-     * @return array
      */
     protected function concatReplyMessage(string $to, string $from, $message): array
     {

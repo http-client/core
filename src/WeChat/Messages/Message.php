@@ -11,17 +11,11 @@ abstract class Message
      */
     protected $type;
 
-    /**
-     * @return string
-     */
     public function type(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return [];
