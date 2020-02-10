@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Http\Middleware;
+namespace HttpClient\Http\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 

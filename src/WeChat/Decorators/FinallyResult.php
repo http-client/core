@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Decorators;
+namespace HttpClient\WeChat\Decorators;
 
 class FinallyResult
 {

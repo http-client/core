@@ -1,6 +1,6 @@
 <?php
 
-use WeClient\Aliyun\ObjectStorageService;
+use HttpClient\Aliyun\ObjectStorageService;
 
 require 'vendor/autoload.php';
 

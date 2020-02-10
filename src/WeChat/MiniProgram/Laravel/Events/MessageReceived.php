@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\MiniProgram\Laravel\Events;
+namespace HttpClient\WeChat\MiniProgram\Laravel\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;

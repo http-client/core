@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Exceptions;
+namespace HttpClient\Exceptions;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;

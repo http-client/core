@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\MediaPlatform;
+namespace HttpClient\WeChat\MediaPlatform;
 
+use HttpClient\Concerns\Observable;
+use HttpClient\WeChat\Decorators\FinallyResult;
+use HttpClient\WeChat\Pipes as WeChatPipes;
 use League\Pipeline\PipelineBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use WeForge\Concerns\Observable;
-use WeForge\WeChat\Decorators\FinallyResult;
-use WeForge\WeChat\Pipes as WeChatPipes;
 
 class Server
 {

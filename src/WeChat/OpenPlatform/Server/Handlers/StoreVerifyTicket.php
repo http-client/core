@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform\Server\Handlers;
+namespace HttpClient\WeChat\OpenPlatform\Server\Handlers;
 
-use WeForge\WeChat\OpenPlatform\ComponentVerifyTicketCache;
+use HttpClient\WeChat\OpenPlatform\ComponentVerifyTicketCache;
 
 class StoreVerifyTicket
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Pipes;
+namespace HttpClient\WeChat\Pipes;
 
 use Symfony\Component\HttpFoundation\Request;
 

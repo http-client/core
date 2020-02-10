@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\MediaPlatform;
+namespace HttpClient\WeChat\MediaPlatform;
 
-use WeForge\Concerns;
-use WeForge\Http\Client;
-use WeForge\WeChat\Exceptions\ResponseWithErrorException;
+use HttpClient\Client;
+use HttpClient\Concerns;
+use HttpClient\WeChat\Exceptions\ResponseWithErrorException;
 
 class AccessTokenClient extends Client
 {

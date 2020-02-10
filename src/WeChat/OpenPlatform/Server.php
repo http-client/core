@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform;
+namespace HttpClient\WeChat\OpenPlatform;
 
+use HttpClient\Concerns\Observable;
+use HttpClient\WeChat\MediaPlatform\Server as MediaPlatformServer;
+use HttpClient\WeChat\OpenPlatform\Server\Handlers\StoreVerifyTicket;
+use HttpClient\WeChat\Pipes as WeChatPipes;
 use League\Pipeline\PipelineBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use WeForge\Concerns\Observable;
-use WeForge\WeChat\OpenPlatform\Server\Handlers\StoreVerifyTicket;
-use WeForge\WeChat\Pipes as WeChatPipes;
 
 class Server
 {
@@ -51,5 +52,10 @@ class Server
             ))
             ->build()
             ->process($this->request);
+    }
+
+    public function mediaPlatform()
+    {
+        return new MediaPlatformServer($this->config, $this->request);
     }
 }

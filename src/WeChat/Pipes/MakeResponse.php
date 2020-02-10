@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Pipes;
+namespace HttpClient\WeChat\Pipes;
 
+use HttpClient\Concerns\GeneratesRandomString;
+use HttpClient\WeChat\Decorators\FinallyResult;
+use HttpClient\WeChat\Encryption\Encrypter;
 use Symfony\Component\HttpFoundation\Response;
-use WeForge\Concerns\GeneratesRandomString;
-use WeForge\WeChat\Decorators\FinallyResult;
-use WeForge\WeChat\Encryption\Encrypter;
 
 class MakeResponse
 {

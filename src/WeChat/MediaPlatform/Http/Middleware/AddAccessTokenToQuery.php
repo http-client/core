@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\MediaPlatform\Http\Middleware;
+namespace HttpClient\WeChat\MediaPlatform\Http\Middleware;
 
-use WeForge\Http\Middleware\MergeQuery;
-use WeForge\WeChat\MediaPlatform\AccessTokenClient;
+use HttpClient\Http\Middleware\MergeQuery;
+use HttpClient\WeChat\MediaPlatform\AccessTokenClient;
 
 class AddAccessTokenToQuery extends MergeQuery
 {

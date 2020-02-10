@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Pipes;
+namespace HttpClient\WeChat\Pipes;
 
+use HttpClient\Concerns\ObservesHandler;
+use HttpClient\WeChat\Concerns\ConcatenatesResponseMessage;
+use HttpClient\WeChat\Decorators\FinallyResult;
 use Symfony\Component\HttpFoundation\Response;
-use WeForge\Concerns\ObservesHandler;
-use WeForge\WeChat\Concerns\ConcatenatesResponseMessage;
-use WeForge\WeChat\Decorators\FinallyResult;
 
 class ObservesHandlers
 {

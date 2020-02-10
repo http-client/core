@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Encryption;
+namespace HttpClient\WeChat\Encryption;
 
-use WeForge\Concerns\GeneratesRandomString;
+use HttpClient\Concerns\GeneratesRandomString;
 
 class Encrypter
 {

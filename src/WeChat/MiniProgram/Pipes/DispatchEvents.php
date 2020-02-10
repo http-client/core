@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\MiniProgram\Pipes;
+namespace HttpClient\WeChat\MiniProgram\Pipes;
 
 use WeForge\WeChat\MiniProgram\Laravel\Events\MessageReceived;
 use WeForge\WeForge;

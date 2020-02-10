@@ -2,17 +2,23 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat;
+namespace HttpClient\WeChat;
 
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use WeForge\Http\Client;
-use WeForge\WeChat\Http\Middleware\CredentialInvalidDecider;
-use WeForge\WeChat\MediaPlatform\AccessTokenClient;
-use WeForge\WeChat\MediaPlatform\Http\Middleware\AddAccessTokenToQuery;
+use HttpClient\Client;
+use HttpClient\WeChat\Http\Middleware\CredentialInvalidDecider;
+use HttpClient\WeChat\MediaPlatform\AccessTokenClient;
+use HttpClient\WeChat\MediaPlatform\Http\Middleware\AddAccessTokenToQuery;
 
+/**
+ * @name 公众号
+ */
 class MediaPlatform extends Client
 {
+    use MediaPlatform\ManagesUsers,
+        MediaPlatform\ManagesTags;
+
     /**
      * Base URI of the http client.
      *

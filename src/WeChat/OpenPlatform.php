@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat;
+namespace HttpClient\WeChat;
 
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use WeForge\Http\Client;
-use WeForge\WeChat\Http\Middleware\CredentialInvalidDecider;
-use WeForge\WeChat\OpenPlatform\ComponentAccessTokenClient;
-use WeForge\WeChat\OpenPlatform\Http\Middleware\AddComponentAccessTokenToQuery;
+use HttpClient\Client;
+use HttpClient\WeChat\Http\Middleware\CredentialInvalidDecider;
+use HttpClient\WeChat\OpenPlatform\ComponentAccessTokenClient;
+use HttpClient\WeChat\OpenPlatform\Http\Middleware\AddComponentAccessTokenToQuery;
 
 class OpenPlatform extends Client
 {
@@ -27,8 +27,6 @@ class OpenPlatform extends Client
      */
     protected function apply(HandlerStack $handlerStack)
     {
-        parent::apply($handlerStack);
-
         [$config] = $this->getOptions();
 
         $handlerStack->push(
@@ -40,5 +38,43 @@ class OpenPlatform extends Client
                 (new ComponentAccessTokenClient($config['app_id'], $config['secret']))->setBaseUri($this->baseUri)->freshToken();
             })
         ));
+    }
+
+    public function mediaPlatform($appId, $refreshToken = null)
+    {
+        [$config] = $this->getOptions();
+
+        return $this->delegateAuthorizer($appId, $refreshToken, $config);
+    }
+
+    protected function delegateAuthorizer()
+    {
+        $client = new class(...func_get_args()) extends Client {
+            protected $authorizerAppId;
+            protected $authorizerRefreshToken;
+            protected $componentConfig;
+
+            public function __construct($authorizerAppId, $authorizerRefreshToken, $componentConfig)
+            {
+                $this->authorizerAppId = $authorizerAppId;
+                $this->authorizerRefreshToken = $authorizerRefreshToken;
+                $this->componentConfig = $componentConfig;
+            }
+
+            protected function apply(\GuzzleHttp\HandlerStack $handlerStack)
+            {
+                $handlerStack->push(
+                    new \HttpClient\WeChat\OpenPlatform\Http\Middleware\Authorizer\AddAccessTokenToQuery(
+                        new ComponentAccessTokenClient($this->componentConfig['app_id'], $this->componentConfig['secret']), $this->authorizerAppId, $this->authorizerRefreshToken,
+                    )
+                );
+            }
+        };
+
+        // return $client->setHttpClient($this->getHttpClient())
+        //         ->castsResponseUsing($this->castsResponseUsing);
+        return $client->setBaseUri($this->baseUri)
+                    ->setConfig($this->getConfig())
+                    ->castsResponseUsing($this->castsResponseUsing);
     }
 }

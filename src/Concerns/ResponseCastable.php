@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeClient\Concerns;
+namespace HttpClient\Concerns;
 
 use Psr\Http\Message\ResponseInterface;
 
@@ -14,35 +14,53 @@ trait ResponseCastable
     protected $withResponseCasting = true;
 
     /**
-     * @var callable|null
+     * @var mixed
      */
-    protected static $castsResponseUsing;
+    protected $castsResponseUsing;
 
     /**
-     * @param callable $callback
+     * @param mixed $value
+     *
+     * @ignore
      *
      * @return static
      */
-    public static function castsResponseUsing($callback)
+    public function castsResponseUsing($value)
     {
-        static::$castsResponseUsing = $callback;
+        $this->castsResponseUsing = $value;
 
-        return new static;
+        return $this;
     }
 
     /**
+     * @ignore
+     *
      * @return mixed
      */
     public function castsResponse(ResponseInterface $response)
     {
-        if (static::$castsResponseUsing && $this->withResponseCasting) {
-            return call_user_func_array(static::$castsResponseUsing, [$response]);
+        if (($caster = $this->castsResponseUsing) && $this->withResponseCasting) {
+            if (is_callable($caster)) {
+                return call_user_func($caster, $response);
+            }
+
+            if (is_string($caster)) {
+                return new $caster($response);
+            }
+
+            if (is_array($caster)) {
+                return call_user_func($caster, $response);
+            }
+
+            exit('invalid handler');
         }
 
         return $response;
     }
 
     /**
+     * @ignore
+     *
      * @param callable $callback
      */
     public function withoutResponseCasting($callback): ResponseInterface

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform;
+namespace HttpClient\WeChat\OpenPlatform;
 
 use Closure;
 use DateInterval;
-use WeForge\Concerns\InteractsWithCache;
+use HttpClient\Concerns\InteractsWithCache;
 
 class ComponentAccessTokenCache
 {
@@ -17,7 +17,7 @@ class ComponentAccessTokenCache
      *
      * @var string
      */
-    protected $prefix = 'weforge.wechat.open_platform.component-access-token.';
+    protected $prefix = 'http-client.wechat.open_platform.component-access-token.x';
 
     /**
      * @var string

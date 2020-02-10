@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Concerns;
+namespace HttpClient\Concerns;
 
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
-use WeForge\WeForge;
 
 trait InteractsWithCache
 {
@@ -30,9 +29,9 @@ trait InteractsWithCache
 
     protected function resolveCache(): CacheInterface
     {
-        if (WeForge::$resolveCacheUsing) {
-            return call_user_func(WeForge::$resolveCacheUsing);
-        }
+        // if (WeForge::$resolveCacheUsing) {
+        //     return call_user_func(WeForge::$resolveCacheUsing);
+        // }
 
         return new Psr16Cache(
             new FilesystemAdapter

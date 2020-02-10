@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform;
+namespace HttpClient\WeChat\OpenPlatform;
 
 use DateInterval;
-use WeForge\Concerns\InteractsWithCache;
+use HttpClient\Concerns\InteractsWithCache;
 
 class ComponentVerifyTicketCache
 {

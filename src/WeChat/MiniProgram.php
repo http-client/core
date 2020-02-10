@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat;
+namespace HttpClient\WeChat;
 
 use WeForge\Http\Client;
 

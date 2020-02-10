@@ -2,27 +2,19 @@
 
 declare(strict_types=1);
 
-namespace WeClient\Aliyun;
+namespace HttpClient\Aliyun;
 
-use GuzzleHttp\HandlerStack;
-use WeClient\Client;
+use HttpClient\Client;
 
 class ObjectStorageService extends Client
 {
+    use ObjectStorageService\AuthenticatesWithHeaders,
+        ObjectStorageService\ManagesServices;
+
     /**
      * Base URI of the http client.
      *
      * @var string
      */
     protected $baseUri = 'https://oss-cn-shenzhen.aliyuncs.com';
-
-    /**
-     * Apply to handler stack.
-     *
-     * @return void
-     */
-    protected function apply(HandlerStack $stack)
-    {
-        // $stack->push(new SignatureCalculationsForAuthorizationHeader);
-    }
 }

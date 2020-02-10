@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Concerns;
+namespace HttpClient\Concerns;
 
 trait Observable
 {

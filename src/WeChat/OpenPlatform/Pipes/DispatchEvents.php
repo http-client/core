@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform\Pipes;
+namespace HttpClient\WeChat\OpenPlatform\Pipes;
 
-use WeForge\WeChat\OpenPlatform\Laravel\Events;
-use WeForge\WeForge;
+use HttpClient\WeChat\OpenPlatform\Laravel\Events;
 
 class DispatchEvents
 {
@@ -16,9 +15,9 @@ class DispatchEvents
      */
     public function __invoke(array $payload)
     {
-        if (WeForge::$runningInLaravel) {
-            $this->dispatchLaravelEvents($payload);
-        }
+        // if (WeForge::$runningInLaravel) {
+        //     $this->dispatchLaravelEvents($payload);
+        // }
 
         return $payload;
     }

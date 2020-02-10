@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Encryption;
+namespace HttpClient\WeChat\Encryption;
 
 use RuntimeException;
 

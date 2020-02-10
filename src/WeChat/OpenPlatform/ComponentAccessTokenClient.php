@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\OpenPlatform;
+namespace HttpClient\WeChat\OpenPlatform;
 
-use WeForge\Concerns;
-use WeForge\Http\Client;
-use WeForge\WeChat\Exceptions\ResponseWithErrorException;
+use HttpClient\Client;
+use HttpClient\Concerns;
+use HttpClient\Contracts\AccessToken;
+use HttpClient\WeChat\Exceptions\ResponseWithErrorException;
 
-class ComponentAccessTokenClient extends Client
+class ComponentAccessTokenClient extends Client implements AccessToken
 {
     use Concerns\CastsResponse, Concerns\InteractsWithCache;
 
@@ -37,15 +38,22 @@ class ComponentAccessTokenClient extends Client
     /**
      * Retrieve token from cache or fresh token.
      */
-    public function getToken(): array
+    public function getToken()
     {
         [$appId] = $this->getOptions();
 
         return call_user_func(static::$getTokenUsing ?: function () {
             return $this->getComponentAccessTokenCache()->remember(static::$tokenExpireAt, function () {
-                return $this->requestToken();
+                return $this->requestToken()['component_access_token'];
             });
         }, $appId);
+    }
+
+    public function getAppId()
+    {
+        [$appId] = $this->getOptions();
+
+        return $appId;
     }
 
     /**
@@ -66,7 +74,7 @@ class ComponentAccessTokenClient extends Client
         $response = $this->withoutResponseCasting(function () {
             [$appId, $appSecret] = $this->getOptions();
 
-            return $this->post('cgi-bin/component/api_component_token', [
+            return $this->postJson('cgi-bin/component/api_component_token', [
                 'component_appid' => $appId, 'component_appsecret' => $appSecret, 'component_verify_ticket' => $this->getComponentVerifyTicketCache()->get(),
             ]);
         });

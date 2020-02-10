@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Http\Middleware;
+namespace HttpClient\WeChat\Http\Middleware;
 
+use HttpClient\Concerns\CastsResponse;
+use HttpClient\Support\Logger;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use WeForge\Concerns\CastsResponse;
-use WeForge\Support\Logger;
 
 class CredentialInvalidDecider
 {

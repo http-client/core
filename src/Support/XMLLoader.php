@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Support;
+namespace HttpClient\Support;
 
 use Closure;
 use SimpleXMLElement;

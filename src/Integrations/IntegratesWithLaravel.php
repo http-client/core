@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Integrations;
+namespace HttpClient\Integrations;
 
 trait IntegratesWithLaravel
 {

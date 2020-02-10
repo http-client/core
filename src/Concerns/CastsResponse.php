@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WeClient\Concerns;
+namespace HttpClient\Concerns;
 
+use HttpClient\Exceptions\ResponseCastingErrorException;
 use Psr\Http\Message\ResponseInterface;
-use WeForge\Exceptions\ResponseCastingErrorException;
+use SimpleXMLElement;
 
 trait CastsResponse
 {
@@ -27,14 +28,40 @@ trait CastsResponse
      */
     public function castsResponseToArray(ResponseInterface $response): array
     {
-        $decoded = json_decode(
-            $this->castsResponseToString($response), true
-        );
+        $string = $this->castsResponseToString($response);
+
+        if ($string == '' && ($response->getStatusCode() >= 200 && $response->getStatusCode() < 299)) {
+            return [];
+        }
+
+        if ($array = $this->tryCastJson($string)) {
+            return $array;
+        }
+
+        if ($array = $this->tryCastXml($string)) {
+            return $array;
+        }
+
+        throw (new ResponseCastingErrorException($string))->withResponse($response);
+    }
+
+    protected function tryCastJson($string)
+    {
+        $decoded = json_decode($string, true);
 
         if (json_last_error() === JSON_ERROR_NONE) {
             return $decoded;
         }
+    }
 
-        throw (new ResponseCastingErrorException(json_last_error_msg()))->withResponse($response);
+    protected function tryCastXml($string)
+    {
+        $previous = libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($string, SimpleXMLElement::class, LIBXML_NOCDATA)), true);
+        libxml_disable_entity_loader($previous);
+
+        if ($values) {
+            return $values;
+        }
     }
 }

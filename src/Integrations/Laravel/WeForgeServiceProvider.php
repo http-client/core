@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Integrations\Laravel;
+namespace HttpClient\Integrations\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use WeForge\WeForge;

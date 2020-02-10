@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Exceptions;
+namespace HttpClient\WeChat\Exceptions;
 
 use RuntimeException;
 

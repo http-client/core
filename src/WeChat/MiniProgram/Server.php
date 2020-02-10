@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\MiniProgram;
+namespace HttpClient\WeChat\MiniProgram;
 
 use League\Pipeline\PipelineBuilder;
 use Symfony\Component\HttpFoundation\Request;

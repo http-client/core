@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Pipes;
+namespace HttpClient\WeChat\Pipes;
 
-use WeForge\WeChat\Exceptions\InvalidSignatureException;
+use HttpClient\WeChat\Exceptions\InvalidSignatureException;
 
 class ValidateSignature
 {
@@ -27,7 +27,7 @@ class ValidateSignature
     }
 
     /**
-     * @throws \WeForge\WeChat\Exceptions\InvalidSignatureException
+     * @throws \HttpClient\WeChat\Exceptions\InvalidSignatureException
      */
     public function __invoke(array $data): array
     {
@@ -46,7 +46,7 @@ class ValidateSignature
     /**
      * Validate the signature
      *
-     * @throws \WeForge\WeChat\Exceptions\InvalidSignatureException
+     * @throws \HttpClient\WeChat\Exceptions\InvalidSignatureException
      */
     protected function validate(array $attributes, string $signature): void
     {

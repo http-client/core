@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Pipes;
+namespace HttpClient\WeChat\Pipes;
 
-use WeForge\Support\XMLLoader;
-use WeForge\WeChat\Exceptions\InterpretException;
+use HttpClient\Support\XMLLoader;
+use HttpClient\WeChat\Exceptions\InterpretException;
 
 class ContentInterpretation
 {
     /**
-     * @throws \WeForge\WeChat\Exceptions\InterpretException
+     * @throws \HttpClient\WeChat\Exceptions\InterpretException
      */
     public function __invoke(string $content): array
     {

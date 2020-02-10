@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WeForge\Concerns;
+namespace HttpClient\Support;
 
-trait GeneratesRandomString
+class Str
 {
-    protected function generateRandomString(int $length = 16): string
+    public static function random($length = 16)
     {
         $value = '';
         $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';

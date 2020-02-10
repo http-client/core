@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WeForge\WeChat\Messages;
+namespace HttpClient\WeChat\Messages;
 
 abstract class Message
 {
