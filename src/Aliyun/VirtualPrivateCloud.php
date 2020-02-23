@@ -9,7 +9,8 @@ use HttpClient\Client;
 class VirtualPrivateCloud extends Client
 {
     use VirtualPrivateCloud\EncapsulatesRequests,
-        VirtualPrivateCloud\ManagesVpcs;
+        VirtualPrivateCloud\ManagesVpcs,
+        VirtualPrivateCloud\ManagesSwitches;
 
     protected $baseUri = 'https://vpc.aliyuncs.com';
 }

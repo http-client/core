@@ -12,4 +12,12 @@ trait ManagesDomains
             'Action' => 'DescribeDomains',
         ], $params));
     }
+
+    public function getDomain($domain)
+    {
+        return $this->encapsulateRequest(array_merge([
+            'Action' => 'DescribeDomainInfo',
+            'DomainName' => $domain,
+        ]));
+    }
 }

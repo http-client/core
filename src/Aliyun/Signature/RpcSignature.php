@@ -47,7 +47,7 @@ class RpcSignature
         $string = implode('&', [
             $this->requestMethod,
             urlencode('/'),
-            empty($canonicalizedQueryString) ? '' : $this->percentEncode(substr($canonicalizedQueryString, 1))
+            empty($canonicalizedQueryString) ? '' : $this->percentEncode(substr($canonicalizedQueryString, 1)),
         ]);
 
         return base64_encode(hash_hmac('sha1', $string, $key_.'&', true));

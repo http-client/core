@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HttpClient\Concerns;
 
-use GuzzleHttp\Exception\GuzzleException;
+use Throwable;
 
 trait InteractsWithExceptionHandling
 {
@@ -21,12 +21,15 @@ trait InteractsWithExceptionHandling
     {
         try {
             return $callback();
-        } catch (GuzzleException $e) {
-            if ($this->exceptionHandler) {
-                return $this->exceptionHandler->__invoke($e);
-            }
-
-            throw $e;
+        } catch (Throwable $e) {
+            return $this->handleException($e);
         }
+    }
+
+    protected function handleException(Throwable $e)
+    {
+        return ($this->exceptionHandler ?: function ($e) {
+            throw $e;
+        })->__invoke($e);
     }
 }

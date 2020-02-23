@@ -8,19 +8,13 @@ use HttpClient\Client;
 
 class LogService extends Client
 {
-    use LogService\Sign;
+    use LogService\EncapsulatesRequests,
+        LogService\ManagesProjects;
 
     public function __construct(array $options = [])
     {
         parent::__construct($options);
 
         $this->setBaseUri('https://'.$this->options['endpoint']);
-    }
-
-    public function getProjects()
-    {
-        $headers = $this->authenticateWithHeaders('GET', '/');
-
-        return $this->request('GET', '/', ['headers' => $headers]);
     }
 }

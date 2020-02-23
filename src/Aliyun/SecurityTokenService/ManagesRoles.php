@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace HttpClient\Aliyun\SecurityTokenService;
 
 use HttpClient\Aliyun\CalculatesSignatureApple;
-use HttpClient\Support\Str;
 
 trait ManagesRoles
 {

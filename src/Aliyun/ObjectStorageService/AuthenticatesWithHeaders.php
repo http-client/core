@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace HttpClient\Aliyun\ObjectStorageService;
 
 use HttpClient\Aliyun\CalculatesSignatureWithAlgoSha256;
-use HttpClient\Aliyun\Helper;
 
 trait AuthenticatesWithHeaders
 {

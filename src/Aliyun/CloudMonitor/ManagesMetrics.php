@@ -6,12 +6,30 @@ namespace HttpClient\Aliyun\CloudMonitor;
 
 trait ManagesMetrics
 {
-    public function getMetricList($metricName, $namespace)
+    public function getLatestMetrics($namespace, $metricName)
+    {
+        return $this->encapsulatesRequest([
+            'Action' => 'DescribeMetricLast',
+            'Namespace' => $namespace,
+            'MetricName' => $metricName,
+        ]);
+    }
+
+    public function getMetricList($namespace, $metricName, array $params = [])
     {
         return $this->encapsulatesRequest([
             'Action' => 'DescribeMetricList',
             'MetricName' => $metricName,
             'Namespace' => $namespace,
-        ]);
+        ] + $params);
+    }
+
+    public function getMetrics($namespace, $metricName, array $params = [])
+    {
+        return $this->encapsulatesRequest([
+            'Action' => 'DescribeMetricData',
+            'Namespace' => $namespace,
+            'MetricName' => $metricName,
+        ] + $params);
     }
 }

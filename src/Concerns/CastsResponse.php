@@ -30,15 +30,15 @@ trait CastsResponse
     {
         $string = $this->castsResponseToString($response);
 
-        if ($string == '' && ($response->getStatusCode() >= 200 && $response->getStatusCode() < 299)) {
+        if ($string === '') {
             return [];
         }
 
-        if ($array = $this->tryCastJson($string)) {
+        if (is_array($array = $this->tryCastJson($string))) {
             return $array;
         }
 
-        if ($array = $this->tryCastXml($string)) {
+        if (is_array($array = $this->tryCastXml($string))) {
             return $array;
         }
 

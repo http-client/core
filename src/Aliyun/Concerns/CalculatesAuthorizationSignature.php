@@ -23,7 +23,7 @@ trait CalculatesAuthorizationSignature
         $string = implode("\n", [
             strtoupper($method), $contentMd5, $contentType, $date, $canonicalizedHeadersString,
         ]).$canonicalizedResource;
-// dd($this->options['access_key_secret']);
+        // dd($this->options['access_key_secret']);
         return base64_encode(
             hash_hmac($algo, $string, $this->options['access_key_secret'], true)
         );

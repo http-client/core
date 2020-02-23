@@ -18,7 +18,7 @@ trait ManagesUserCertificates
      *
      * @return mixed
      */
-    public function describeUserCertificates($page = null, $size = null, $lang = null)
+    public function describeUserCertificates($page = 1, $size = 50, $lang = null)
     {
         return $this->encapsulateRequest([
             'Action' => 'DescribeUserCertificateList',

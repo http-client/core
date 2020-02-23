@@ -6,11 +6,9 @@ namespace HttpClient;
 
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
-use HttpClient\Concerns\ResponseCastable;
 use HttpClient\Concerns\InteractsWithExceptionHandling;
-use Throwable;
+use HttpClient\Concerns\ResponseCastable;
 
 class Client
 {

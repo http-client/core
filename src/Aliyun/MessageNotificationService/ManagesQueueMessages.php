@@ -54,11 +54,6 @@ trait ManagesQueueMessages
 
     public function changeQueueMessageVisibility($queueName, $receiptHandle, $timeout)
     {
-        return $this->encapsulatesRequest('PUT', "/queues/{$queueName}/messages", [
-            'query' => [
-                'receiptHandle' => $receiptHandle,
-                'visibilityTimeout' => $timeout,
-            ],
-        ]);
+        return $this->encapsulatesRequest('PUT', "/queues/{$queueName}/messages?receiptHandle={$receiptHandle}&visibilityTimeout={$timeout}");
     }
 }

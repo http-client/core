@@ -6,12 +6,10 @@ namespace HttpClient\Aliyun;
 
 use HttpClient\Client;
 
-class LogServiceProject extends Client
+class ElasticComputeService extends Client
 {
-    use LogService\EncapsulatesRequests,
-        LogServiceProject\ManagesInfo,
-        LogServiceProject\ManagesLogs,
-        LogServiceProject\ManagesLogstores;
+    use ElasticComputeService\EncapsulatesRequests,
+        ElasticComputeService\ManagesSecurityGroups;
 
     public function __construct(array $options = [])
     {

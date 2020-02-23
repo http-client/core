@@ -8,6 +8,7 @@ use HttpClient\Client;
 
 class ResourceAccessManagement extends Client
 {
+    use ResourceAccessManagement\EncapsulatesRequests;
     use ResourceAccessManagement\NeedsAuthentication,
         ResourceAccessManagement\ManagesUsers,
         ResourceAccessManagement\ManagesRoles,

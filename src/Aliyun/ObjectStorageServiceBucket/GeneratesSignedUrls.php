@@ -8,6 +8,23 @@ use HttpClient\Aliyun\SignatureCalculator;
 
 trait GeneratesSignedUrls
 {
+    public function getSignedUrlForGettingObject($filename)
+    {
+        $signature = $this->signForQueryString(
+            'GET', $date = time() + 300,
+            sprintf('/%s/%s', $this->options['bucket_name'], $filename)
+        );
+
+        $query = http_build_query([
+            'OSSAccessKeyId' => $this->options['access_key_id'],
+            'Expires' => $date,
+            'Signature' => $signature,
+            // 'security-token' => $secToken,
+        ]);
+
+        return sprintf('https://%s/%s?%s', $this->options['endpoint'], $filename, $query);
+    }
+
     public function getSignedUrlForPuttingObject(string $filename, string $secToken)
     {
         $signature = $this->signForQueryString(

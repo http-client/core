@@ -6,13 +6,13 @@ namespace HttpClient\Aliyun\LogServiceProject;
 
 trait ManagesLogs
 {
-    public function getLogs(string $logstoreName, $from, $to)
+    public function getLogs(string $logstoreName, $from, $to, array $params = [])
     {
-        $query = [
+        $query = array_merge([
             'type' => 'log',
             'from' => $from,
             'to' => $to,
-        ];
+        ], $params);
 
         return $this->requestWithAuthorization('GET', "/logstores/{$logstoreName}", $query);
     }

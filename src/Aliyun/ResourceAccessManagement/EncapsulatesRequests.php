@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace HttpClient\Aliyun\NetworkAttachedStorage;
+namespace HttpClient\Aliyun\ResourceAccessManagement;
 
 use HttpClient\Aliyun\Signature\RpcSignature;
 use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    public function encapsulateRequest(array $query)
+    public function encapsulateRequest(array $params)
     {
         $query = array_merge([
             'Format' => 'JSON',
-            'Version' => '2017-06-26',
-            'AccessKeyId' => $this->options['access_key_id'],
+            'Version' => '2015-05-01',
             'SignatureMethod' => 'HMAC-SHA1',
-            'Timestamp' => gmdate('Y-m-d\TH:i:s\Z'),
-            'SignatureVersion' => '1.0',
             'SignatureNonce' => Str::random(),
-        ], $query);
+            'SignatureVersion' => '1.0',
+            'AccessKeyId' => $this->options['access_key_id'],
+            'Timestamp' => gmdate("Y-m-d\TH:i:s\Z"),
+        ], $params);
 
         $query['Signature'] = (new RpcSignature($method = 'POST'))->sign($query, $this->options['access_key_secret']);
 
-        return $this->request('POST', '/', compact('query'));
+        return $this->request($method, '/', compact('query'));
     }
 }

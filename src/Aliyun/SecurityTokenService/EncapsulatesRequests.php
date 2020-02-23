@@ -9,7 +9,7 @@ use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    protected function encapsulateRequest(array $params)
+    public function encapsulateRequest(array $params)
     {
         $query = array_merge([
             'AccessKeyId' => $this->options['access_key_id'],
@@ -23,7 +23,7 @@ trait EncapsulatesRequests
         // dd($query);
         $query['Signature'] = (new RpcSignature($method = 'GET'))
                                     ->sign($query, $this->options['access_key_secret']);
-// dd($query);
+        // dd($query);
 
         return $this->request($method, '', compact('query'));
     }

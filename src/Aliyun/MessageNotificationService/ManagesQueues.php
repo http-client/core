@@ -22,4 +22,9 @@ trait ManagesQueues
     {
         return $this->encapsulatesRequest('DELETE', '/queues/'.$name);
     }
+
+    public function getQueue($name)
+    {
+        return $this->encapsulatesRequest('GET', "/queues/${name}");
+    }
 }
