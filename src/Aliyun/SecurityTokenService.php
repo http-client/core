@@ -11,10 +11,10 @@ class SecurityTokenService extends Client
     use SecurityTokenService\EncapsulatesRequests,
         SecurityTokenService\ManagesRoles;
 
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
+    // public function __constructx(array $options = [])
+    // {
+    //     parent::__construct($options);
 
-        $this->setBaseUri('https://'.$this->options['endpoint']);
-    }
+    //     $this->setBaseUri('https://'.$this->options['endpoint']);
+    // }
 }

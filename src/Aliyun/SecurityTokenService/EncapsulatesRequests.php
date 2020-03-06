@@ -25,6 +25,6 @@ trait EncapsulatesRequests
                                     ->sign($query, $this->options['access_key_secret']);
         // dd($query);
 
-        return $this->request($method, '', compact('query'));
+        return $this->send($method, '/', compact('query'));
     }
 }

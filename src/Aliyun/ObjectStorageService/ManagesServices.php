@@ -8,11 +8,7 @@ trait ManagesServices
 {
     public function getServices()
     {
-        $headers = $this->authenticateWithHeaders('GET', $resource = '/');
-
-        return $this->request('GET', $resource, [
-            'headers' => $headers,
-        ]);
+        return $this->encapsulateRequest('GET', '/');
     }
 
     // public function getSignedUrlForGetServices()

@@ -9,10 +9,11 @@ use HttpClient\Client;
 class ResourceAccessManagement extends Client
 {
     use ResourceAccessManagement\EncapsulatesRequests;
-    use ResourceAccessManagement\NeedsAuthentication,
-        ResourceAccessManagement\ManagesUsers,
-        ResourceAccessManagement\ManagesRoles,
-        ResourceAccessManagement\ManagesPolicies;
 
+    /**
+     * Base URI of the http client.
+     *
+     * @var string
+     */
     protected $baseUri = 'https://ram.aliyuncs.com';
 }

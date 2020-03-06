@@ -6,23 +6,33 @@ namespace HttpClient\Aliyun\ObjectStorageServiceBucket;
 
 trait ManagesBuckets
 {
-    public function getBucketInfo()
+    /**
+     * Get info of the given bucket.
+     *
+     * @return mixed
+     */
+    public function getInfo()
     {
-        $resource = '/?bucketInfo';
-
-        $headers = $this->authenticateWithHeaders('GET', '/'.$this->options['bucket_name'].$resource);
-
-        return $this->request('GET', $resource, [
-            'headers' => $headers,
-        ]);
+        return $this->encapsulateRequest('GET', '/?bucketInfo');
     }
 
-    public function putBucket()
+    /**
+     * Create a bucket.
+     *
+     * @return mixed
+     */
+    public function createBucket()
     {
-        $headers = $this->authenticateWithHeaders('PUT', "/{$this->options['bucket_name']}/");
+        return $this->encapsulateRequest('PUT', '/');
+    }
 
-        return $this->request('PUT', '/', [
-            'headers' => $headers,
-        ]);
+    /**
+     * Delete a given bucket.
+     *
+     * @return mixed
+     */
+    public function deleteBucket()
+    {
+        return $this->encapsulateRequest('DELETE', '/');
     }
 }

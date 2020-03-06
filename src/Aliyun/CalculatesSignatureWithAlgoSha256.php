@@ -6,7 +6,7 @@ namespace HttpClient\Aliyun;
 
 trait CalculatesSignatureWithAlgoSha256
 {
-    protected function calculateSignature($method, $contentType, $date, array $canonicalizedHeaders = [], string $canonicalizedResource = '', $algo = 'sha256')
+    protected function calculateSignaturexxx($method, $contentType, $date, array $canonicalizedHeaders = [], string $canonicalizedResource = '', $algo = 'sha256')
     {
         $canonicalizedHeadersString = '';
 

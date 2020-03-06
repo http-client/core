@@ -8,13 +8,21 @@ use HttpClient\Client;
 
 class ObjectStorageService extends Client
 {
-    use ObjectStorageService\AuthenticatesWithHeaders,
+    use ObjectStorageService\EncapsulatesRequests,
         ObjectStorageService\ManagesServices;
 
     /**
-     * Base URI of the http client.
+     * Create a new bucket instance.
      *
-     * @var string
+     * @param string $name
+     *
+     * @return \HttpClient\Aliyun\ObjectStorageServiceBucket
      */
-    protected $baseUri = 'https://oss-cn-shenzhen.aliyuncs.com';
+    public function bucket($name)
+    {
+        $baseUri = preg_replace('/http(s?)\:\/\//i', "$0{$name}.", $this->getBaseUri());
+
+        return (new ObjectStorageServiceBucket($this->getOptions()))
+                        ->setBaseUri($baseUri);
+    }
 }

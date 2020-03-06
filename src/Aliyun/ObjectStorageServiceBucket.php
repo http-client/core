@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun;
 
-use HttpClient\Aliyun\ObjectStorageService\AuthenticatesWithHeaders;
 use HttpClient\Client;
 
 class ObjectStorageServiceBucket extends Client
 {
-    use AuthenticatesWithHeaders;
-    use ObjectStorageServiceBucket\GeneratesSignedUrls,
+    use ObjectStorageService\EncapsulatesRequests,
+        ObjectStorageServiceBucket\GeneratesSignedUrls,
         ObjectStorageServiceBucket\ManagesBuckets,
         ObjectStorageServiceBucket\ManagesObjects;
 
-    public function __construct(array $options = [])
+    public function getBucketName()
     {
-        parent::__construct($options);
+        preg_match('/http(s?):\/\/(\w+)./', $this->getBaseUri(), $matches);
 
-        $this->setBaseUri('https://'.$this->options['endpoint']);
+        return $matches[2];
     }
 }

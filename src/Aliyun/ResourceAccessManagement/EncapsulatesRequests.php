@@ -21,8 +21,8 @@ trait EncapsulatesRequests
             'Timestamp' => gmdate("Y-m-d\TH:i:s\Z"),
         ], $params);
 
-        $query['Signature'] = (new RpcSignature($method = 'POST'))->sign($query, $this->options['access_key_secret']);
+        $query['Signature'] = RpcSignature::sign($query, $this->options['access_key_secret']);
 
-        return $this->request($method, '/', compact('query'));
+        return $this->send('POST', '/', compact('query'));
     }
 }

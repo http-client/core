@@ -8,37 +8,16 @@ trait ManagesObjects
 {
     public function headObject($objectName)
     {
-        $resource = '/'.$objectName;
-
-        $headers = $this->authenticateWithHeaders('HEAD', '/'.$this->options['bucket_name'].$resource);
-
-        return $this->request('HEAD', $resource, [
-            'headers' => $headers,
-        ]);
+        return $this->encapsulateRequest('HEAD', '/'.$objectName);
     }
 
     public function getObject($objectName)
     {
-        $resource = '/'.$objectName;
-
-        $headers = $this->authenticateWithHeaders('GET', '/'.$this->options['bucket_name'].$resource);
-
-        return $this->withoutResponseCasting(function () use ($resource, $headers) {
-            return $this->request('GET', $resource, [
-                'headers' => $headers,
-            ]);
-        });
+        return $this->encapsulateRequest('GET', '/'.$objectName);
     }
 
-    public function putObject($objectName, $content)
+    public function putObject($objectName, $body)
     {
-        $resource = '/'.$objectName;
-
-        $headers = $this->authenticateWithHeaders('PUT', '/'.$this->options['bucket_name'].$resource);
-
-        return $this->request('PUT', $resource, [
-            'headers' => $headers,
-            'body' => $content,
-        ]);
+        return $this->encapsulateRequest('PUT', '/'.$objectName, ['body' => $body]);
     }
 }
