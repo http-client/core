@@ -12,7 +12,7 @@ trait EncapsulatesRequests
     public function encapsulateRequest(array $params)
     {
         $query = array_merge([
-            'Format' => 'json',
+            'Format' => 'JSON',
             'Version' => '2014-05-26',
             'AccessKeyId' => $this->options['access_key_id'],
             'SignatureMethod' => 'HMAC-SHA1',
@@ -21,8 +21,8 @@ trait EncapsulatesRequests
             'SignatureNonce' => Str::random(),
         ], $params);
 
-        $query['Signature'] = (new RpcSignature($method = 'POST'))->sign($query, $this->options['access_key_secret']);
+        $query['Signature'] = RpcSignature::sign($query, $this->options['access_key_secret']);
 
-        return $this->request($method, '', compact('query'));
+        return $this->send('POST', '/', compact('query'));
     }
 }

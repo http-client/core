@@ -8,18 +8,12 @@ use HttpClient\Client;
 
 class CloudMonitor extends Client
 {
-    use CloudMonitor\EncapsulatesRequests,
-        CloudMonitor\ManagesProjectMetas,
-        CloudMonitor\ManagesMetricMetas,
-        CloudMonitor\ManagesMetrics;
+    use CloudMonitor\EncapsulatesRequests;
 
     /**
-     * HttpClient constructor.
+     * Base URI of the http client.
+     *
+     * @var string
      */
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-
-        $this->setBaseUri($this->options['endpoint']);
-    }
+    protected $baseUri = 'https://metrics.aliyuncs.com';
 }

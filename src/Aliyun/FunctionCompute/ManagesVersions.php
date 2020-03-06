@@ -6,20 +6,20 @@ namespace HttpClient\Aliyun\FunctionCompute;
 
 trait ManagesVersions
 {
-    public function getVersions($serviceName, array $query = [])
+    public function getVersions($serviceName)
     {
-        return $this->requestResource('GET', "/{$this->apiVersion}/services/{$serviceName}/versions", compact('query'));
+        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/services/{$serviceName}/versions");
     }
 
-    public function publishVersion($serviceName, string $description)
+    public function publishVersion($serviceName, string $description = null)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'POST', "/{$this->apiVersion}/services/{$serviceName}/versions", ['json' => compact('description')]
         );
     }
 
     public function deleteVersion($serviceName, $versionId)
     {
-        return $this->requestResource('DELETE', "/{$this->apiVersion}/services/{$serviceName}/versions/{$versionId}");
+        return $this->encapsulateRequest('DELETE', "/{$this->apiVersion}/services/{$serviceName}/versions/{$versionId}");
     }
 }

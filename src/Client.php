@@ -9,10 +9,13 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use HttpClient\Concerns\InteractsWithExceptionHandling;
 use HttpClient\Concerns\ResponseCastable;
+use HttpClient\Testing\FakesRequests;
+use HttpClient\Testing\RecordsRequests;
 
 class Client
 {
-    use ResponseCastable, InteractsWithExceptionHandling;
+    use ResponseCastable, InteractsWithExceptionHandling,
+        FakesRequests, RecordsRequests;
 
     /**
      * Base URI of the http client.
@@ -24,7 +27,7 @@ class Client
     /**
      * The GuzzleHttp client instance.
      *
-     * @var \GuzzleHttp\ClientInterface
+     * @var \Psr\Http\Client\ClientInterface
      */
     protected $httpClient;
 
@@ -42,16 +45,16 @@ class Client
     }
 
     /**
-     * Makes an http request.
+     * Make an http request.
      *
      * @ignore
      *
      * @return mixed
      */
-    public function request(string $method, string $uri = '', array $options = [])
+    public function send(string $method, string $uri = '', array $options = [])
     {
         return $this->withExceptionHandling(function () use ($method, $uri, $options) {
-            return $this->castsResponse($this->getHttpClient()->request($method, $uri, $options));
+            return $this->castResponse($this->getHttpClient()->request($method, $uri, $options));
         });
     }
 
@@ -112,25 +115,19 @@ class Client
         return $this->options;
     }
 
-    /**
-     * @ignore
-     */
-    public function getHandlerStack(): HandlerStack
+    protected function getHandlerStack(): HandlerStack
     {
         $stack = HandlerStack::create();
 
-        $this->apply($stack);
+        $stack->push($this->recorderHandler());
+        $stack->push($this->fakerHandler());
 
         return $stack;
     }
 
-    /**
-     * Apply to handler stack.
-     *
-     * @return void
-     */
-    protected function apply(HandlerStack $stack)
+    public static function unfake()
     {
-        //
+        static::$fakers = [];
+        static::$records = [];
     }
 }

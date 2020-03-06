@@ -8,13 +8,12 @@ use HttpClient\Client;
 
 class ElasticComputeService extends Client
 {
-    use ElasticComputeService\EncapsulatesRequests,
-        ElasticComputeService\ManagesSecurityGroups;
+    use ElasticComputeService\EncapsulatesRequests;
 
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-
-        $this->setBaseUri('https://'.$this->options['endpoint']);
-    }
+    /**
+     * Base URI of the http client.
+     *
+     * @var string
+     */
+    protected $baseUri = 'https://ecs.aliyuncs.com';
 }

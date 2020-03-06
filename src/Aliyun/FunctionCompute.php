@@ -16,12 +16,12 @@ use HttpClient\Client;
 class FunctionCompute extends Client
 {
     use FunctionCompute\EncapsulatesRequests,
-        FunctionCompute\ManagesServices,
-        FunctionCompute\ManagesFunctions,
-        FunctionCompute\ManagesTriggers,
-        FunctionCompute\ManagesVersions,
         FunctionCompute\ManagesAliases,
-        FunctionCompute\ManagesCustomDomains;
+        FunctionCompute\ManagesCustomDomains,
+        FunctionCompute\ManagesFunctions,
+        FunctionCompute\ManagesServices,
+        FunctionCompute\ManagesTriggers,
+        FunctionCompute\ManagesVersions;
 
     /**
      * Aliyun Function Compute API version.
@@ -29,11 +29,4 @@ class FunctionCompute extends Client
      * @var string
      */
     protected $apiVersion = '2016-08-15';
-
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-
-        $this->setBaseUri('https://'.$this->options['endpoint']);
-    }
 }

@@ -9,7 +9,7 @@ use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    protected function encapsulatesRequest(array $parameters)
+    public function encapsulateRequest(array $parameters)
     {
         $query = array_merge([
             'Format' => 'JSON',
@@ -21,9 +21,8 @@ trait EncapsulatesRequests
             'SignatureNonce' => Str::random(),
         ], $parameters);
 
-        $query['Signature'] = (new RpcSignature($method = 'POST'))
-                                    ->sign($query, $this->options['access_key_secret']);
+        $query['Signature'] = RpcSignature::sign($query, $this->options['access_key_secret']);
 
-        return $this->request($method, '', compact('query'));
+        return $this->send('POST', '/', compact('query'));
     }
 }

@@ -6,24 +6,19 @@ namespace HttpClient\Aliyun\Signature;
 
 class RpcSignature
 {
-    protected $withPercentEncoded = true;
+    // protected $withPercentEncoded = true;
 
-    protected $requestMethod;
+    // public function withoutPercentEncoded()
+    // {
+    //     $this->withPercentEncoded = false;
 
-    public function __construct($requestMethod)
+    //     return $this;
+    // }
+
+    public static function sign(array $parameters, $key_)
     {
-        $this->requestMethod = $requestMethod;
-    }
+        unset($parameters['Signature']);
 
-    public function withoutPercentEncoded()
-    {
-        $this->withPercentEncoded = false;
-
-        return $this;
-    }
-
-    public function sign(array $parameters, $key_)
-    {
         $parameters = array_filter($parameters, function ($value) {
             if (is_null($value)) {
                 return false;
@@ -41,19 +36,19 @@ class RpcSignature
         $canonicalizedQueryString = '';
 
         foreach ($parameters as $key => $value) {
-            $canonicalizedQueryString .= '&'.$this->percentEncode($key).'='.$this->percentEncode($value);
+            $canonicalizedQueryString .= '&'.static::percentEncode($key).'='.static::percentEncode($value);
         }
 
         $string = implode('&', [
-            $this->requestMethod,
+            'POST',
             urlencode('/'),
-            empty($canonicalizedQueryString) ? '' : $this->percentEncode(substr($canonicalizedQueryString, 1)),
+            empty($canonicalizedQueryString) ? '' : static::percentEncode(substr($canonicalizedQueryString, 1)),
         ]);
 
         return base64_encode(hash_hmac('sha1', $string, $key_.'&', true));
     }
 
-    protected function percentEncode($string)
+    protected static function percentEncode($string)
     {
         // if (! $this->withPercentEncoded) {
         //     return $string;

@@ -6,18 +6,9 @@ namespace HttpClient\Aliyun;
 
 use HttpClient\Client;
 
-/**
- * @name sadf
- */
 class CertificateAuthorityService extends Client
 {
-    use CertificateAuthorityService\EncapsulatesRequests,
-        CertificateAuthorityService\ManagesDVOrders,
-        CertificateAuthorityService\ManagesUserCertificates,
-        CertificateAuthorityService\ManagesOrderInstances,
-        CertificateAuthorityService\ManagesCertificates,
-        CertificateAuthorityService\ManagesResources,
-        CertificateAuthorityService\ManagesOrders;
+    use CertificateAuthorityService\EncapsulatesRequests;
 
     /**
      * Base URI of the http client.

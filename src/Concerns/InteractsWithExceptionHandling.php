@@ -10,26 +10,33 @@ trait InteractsWithExceptionHandling
 {
     protected $exceptionHandler;
 
-    public function setExceptionHandler(callable $handler)
+    public function withExceptionHandler(callable $handler)
     {
         $this->exceptionHandler = $handler;
 
         return $this;
     }
 
+    public function withoutExceptionHandler()
+    {
+        $this->exceptionHandler = null;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return mixed
+     */
     protected function withExceptionHandling($callback)
     {
         try {
             return $callback();
         } catch (Throwable $e) {
-            return $this->handleException($e);
+            return ($this->exceptionHandler ?: function ($e) {
+                throw $e;
+            })->__invoke($e);
         }
-    }
-
-    protected function handleException(Throwable $e)
-    {
-        return ($this->exceptionHandler ?: function ($e) {
-            throw $e;
-        })->__invoke($e);
     }
 }

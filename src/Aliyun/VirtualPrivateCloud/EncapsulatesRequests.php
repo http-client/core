@@ -9,7 +9,7 @@ use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    protected function encapsulateRequest(array $params)
+    public function encapsulateRequest(array $params)
     {
         $query = array_merge([
             'AccessKeyId' => $this->options['access_key_id'],

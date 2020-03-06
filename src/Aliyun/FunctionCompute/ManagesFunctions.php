@@ -19,7 +19,7 @@ trait ManagesFunctions
      */
     public function getFunction(string $serviceName, string $functionName)
     {
-        return $this->requestResource('GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
+        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
     }
 
     /**
@@ -31,7 +31,7 @@ trait ManagesFunctions
      */
     public function getFunctions(string $serviceName)
     {
-        return $this->requestResource('GET', "/{$this->apiVersion}/services/{$serviceName}/functions");
+        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/services/{$serviceName}/functions");
     }
 
     /**
@@ -43,7 +43,7 @@ trait ManagesFunctions
      */
     public function createFunction(string $serviceName, array $params)
     {
-        return $this->requestResource('POST', "/{$this->apiVersion}/services/{$serviceName}/functions", ['json' => $params]);
+        return $this->encapsulateRequest('POST', "/{$this->apiVersion}/services/{$serviceName}/functions", ['json' => $params]);
     }
 
     /**
@@ -56,7 +56,7 @@ trait ManagesFunctions
      */
     public function updateFunction(string $serviceName, string $functionName, array $params)
     {
-        return $this->requestResource('PUT', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}", ['json' => $params]);
+        return $this->encapsulateRequest('PUT', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}", ['json' => $params]);
     }
 
     /**
@@ -69,7 +69,7 @@ trait ManagesFunctions
      */
     public function deleteFunction(string $serviceName, string $functionName)
     {
-        return $this->requestResource('DELETE', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
+        return $this->encapsulateRequest('DELETE', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
     }
 
     /**
@@ -83,7 +83,7 @@ trait ManagesFunctions
      */
     public function invokeFunction(string $serviceName, string $functionName, array $body, bool $asynchronous = false)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'POST',
             "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/invocations",
             ['json' => $body],

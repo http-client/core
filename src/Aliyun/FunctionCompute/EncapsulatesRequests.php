@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\FunctionCompute;
 
-use HttpClient\Aliyun\Concerns\CalculatesAuthorizationSignature;
+use HttpClient\Aliyun\Signature\AuthorizationSignature;
 
 trait EncapsulatesRequests
 {
-    use CalculatesAuthorizationSignature;
-
-    protected function requestResource($method, $resource, array $options = [], array $canonicalizedHeaders = [])
+    public function encapsulateRequest($method, $resource, array $options = [], array $canonicalizedHeaders = [])
     {
         if (isset($this->options['security_token'])) {
             $canonicalizedHeaders = array_merge($canonicalizedHeaders, ['x-fc-security-token' => $this->options['security_token']]);
@@ -18,18 +16,17 @@ trait EncapsulatesRequests
         $contentMd5 = '';
 
         $headers = [
-            'Host' => $this->options['endpoint'],
             'Date' => $date = gmdate('D, d M Y H:i:s T'),
             'Content-Type' => $contentType = 'application/json',
             'Content-Length' => '0',
             // 'Content-MD5' => '',
         ] + $canonicalizedHeaders;
 
-        $signature = $this->calculateAuthorizationSignatureWithSha256($method, $contentMd5, $contentType, $date, $canonicalizedHeaders, $resource);
+        $signature = AuthorizationSignature::sign($method, $contentMd5, $contentType, $date, $canonicalizedHeaders, $resource, $this->options['access_key_secret'], 'sha256');
 
         $headers['Authorization'] = sprintf('FC %s:%s', $this->options['access_key_id'], $signature);
 
-        return $this->request($method, $resource, array_merge(
+        return $this->send($method, $resource, array_merge(
             ['headers' => $headers], $options
         ));
     }

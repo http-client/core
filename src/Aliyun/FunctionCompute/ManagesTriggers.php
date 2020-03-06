@@ -20,7 +20,7 @@ trait ManagesTriggers
      */
     public function getTrigger(string $serviceName, string $functionName, string $triggerName)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers/{$triggerName}"
         );
     }
@@ -35,7 +35,7 @@ trait ManagesTriggers
      */
     public function getTriggers(string $serviceName, string $functionName)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers"
         );
     }
@@ -50,7 +50,7 @@ trait ManagesTriggers
      */
     public function createTrigger(string $serviceName, string $functionName, array $json)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'POST', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers", compact('json')
         );
     }
@@ -66,7 +66,7 @@ trait ManagesTriggers
      */
     public function updateTrigger(string $serviceName, string $functionName, string $triggerName, array $json)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'PUT', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers/{$triggerName}", compact('json')
         );
     }
@@ -82,7 +82,7 @@ trait ManagesTriggers
      */
     public function deleteTrigger(string $serviceName, string $functionName, string $triggerName)
     {
-        return $this->requestResource(
+        return $this->encapsulateRequest(
             'DELETE', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers/{$triggerName}"
         );
     }

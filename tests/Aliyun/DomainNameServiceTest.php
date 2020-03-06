@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace HttpClient\Tests\Aliyun;
 
-use HttpClient\Aliyun\CloudMonitor;
+use HttpClient\Aliyun\DomainNameService;
 use HttpClient\Aliyun\Signature\RpcSignature;
 use HttpClient\Tests\ClientTestCase;
 
-class CloudMonitorTest extends ClientTestCase
+class DomainNameServiceTest extends ClientTestCase
 {
     public function testRequest()
     {
-        $client = new CloudMonitor([
+        $client = new DomainNameService([
             'access_key_id' => 'test-access-key-id',
             'access_key_secret' => 'test-access-key-secret',
         ]);
@@ -25,13 +25,13 @@ class CloudMonitorTest extends ClientTestCase
 
         $this->assertSame('POST', $this->request->getMethod());
         $this->assertSame('https', $this->request->getUri()->getScheme());
-        $this->assertSame('metrics.aliyuncs.com', $this->request->getUri()->getHost());
+        $this->assertSame('alidns.aliyuncs.com', $this->request->getUri()->getHost());
         $this->assertSame('/', $this->request->getUri()->getPath());
 
         $this->assertCount(9, $query);
         $this->assertSame('Bar', $query['Foo']);
         $this->assertSame('JSON', $query['Format']);
-        $this->assertSame('2019-01-01', $query['Version']);
+        $this->assertSame('2015-01-09', $query['Version']);
         $this->assertSame('test-access-key-id', $query['AccessKeyId']);
         $this->assertSame('HMAC-SHA1', $query['SignatureMethod']);
         $this->assertSame('1.0', $query['SignatureVersion']);

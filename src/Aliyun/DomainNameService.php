@@ -8,9 +8,12 @@ use HttpClient\Client;
 
 class DomainNameService extends Client
 {
-    use DomainNameService\EncapsulatesRequests,
-        DomainNameService\ManagesDomains,
-        DomainNameService\ManagesDomainRecords;
+    use DomainNameService\EncapsulatesRequests;
 
+    /**
+     * Base URI of the http client.
+     *
+     * @var string
+     */
     protected $baseUri = 'https://alidns.aliyuncs.com';
 }

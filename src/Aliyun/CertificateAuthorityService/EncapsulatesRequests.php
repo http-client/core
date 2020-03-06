@@ -9,7 +9,7 @@ use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    protected function encapsulateRequest(array $params)
+    public function encapsulateRequest(array $params)
     {
         $query = array_merge([
             'Format' => 'JSON',
@@ -22,15 +22,15 @@ trait EncapsulatesRequests
             'ResourceOwnerAccount' => null,
         ], $params);
 
-        $query['Signature'] = (new RpcSignature($method = 'GET'))->sign($query, $this->options['access_key_secret']);
+        $query['Signature'] = RpcSignature::sign($query, $this->options['access_key_secret']);
 
-        return $this->request($method, '', compact('query'));
+        return $this->send('POST', '/', compact('query'));
     }
 
-    protected function encapsulateRequest20180813(array $params)
-    {
-        return $this->encapsulateRequest(array_merge($params, [
-            'Version' => '2018-08-13',
-        ]));
-    }
+    // public function encapsulateRequest20180813(array $params)
+    // {
+    //     return $this->encapsulateRequest(array_merge($params, [
+    //         'Version' => '2018-08-13',
+    //     ]));
+    // }
 }

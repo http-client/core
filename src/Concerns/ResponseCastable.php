@@ -16,7 +16,7 @@ trait ResponseCastable
     /**
      * @var mixed
      */
-    protected $castsResponseUsing;
+    protected $castResponseUsing;
 
     /**
      * @param mixed $value
@@ -25,9 +25,9 @@ trait ResponseCastable
      *
      * @return static
      */
-    public function castsResponseUsing($value)
+    public function castResponseUsing($value)
     {
-        $this->castsResponseUsing = $value;
+        $this->castResponseUsing = $value;
 
         return $this;
     }
@@ -37,9 +37,9 @@ trait ResponseCastable
      *
      * @return mixed
      */
-    public function castsResponse(ResponseInterface $response)
+    public function castResponse(ResponseInterface $response)
     {
-        if (($caster = $this->castsResponseUsing) && $this->withResponseCasting) {
+        if (($caster = $this->castResponseUsing) && $this->withResponseCasting) {
             if (is_callable($caster)) {
                 return call_user_func($caster, $response);
             }

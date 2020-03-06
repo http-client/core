@@ -13,7 +13,7 @@ trait CastsResponse
     /**
      * Casts response to string.
      */
-    public function castsResponseToString(ResponseInterface $response): string
+    public function castResponseToString(ResponseInterface $response): string
     {
         $contents = (string) $response->getBody();
         $response->getBody()->rewind();
@@ -26,9 +26,9 @@ trait CastsResponse
      *
      * @throws \WeForge\Exceptions\ResponseCastingErrorException
      */
-    public function castsResponseToArray(ResponseInterface $response): array
+    public function castResponseToArray(ResponseInterface $response): array
     {
-        $string = $this->castsResponseToString($response);
+        $string = $this->castResponseToString($response);
 
         if ($string === '') {
             return [];

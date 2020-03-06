@@ -18,7 +18,7 @@ trait ManagesCustomDomains
      */
     public function getCustomDomain(string $domain)
     {
-        return $this->requestResource('GET', "/{$this->apiVersion}/custom-domains/{$domain}");
+        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/custom-domains/{$domain}");
     }
 
     /**
@@ -28,7 +28,7 @@ trait ManagesCustomDomains
      */
     public function getCustomDomains()
     {
-        return $this->requestResource('GET', "/{$this->apiVersion}/custom-domains");
+        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/custom-domains");
     }
 
     /**
@@ -43,7 +43,7 @@ trait ManagesCustomDomains
      */
     public function createCustomDomain($domain, $protocol, array $routes = [], array $certs = [])
     {
-        return $this->requestResource('POST', "/{$this->apiVersion}/custom-domains", [
+        return $this->encapsulateRequest('POST', "/{$this->apiVersion}/custom-domains", [
             'json' => array_filter([
                 'DomainName' => $domain,
                 'Protocol' => $protocol,
@@ -55,7 +55,7 @@ trait ManagesCustomDomains
 
     public function updateCustomDomain($domain, $protocol, array $routes = [], array $certs = [])
     {
-        return $this->requestResource('PUT', "/{$this->apiVersion}/custom-domains/{$domain}", [
+        return $this->encapsulateRequest('PUT', "/{$this->apiVersion}/custom-domains/{$domain}", [
             'json' => array_filter([
                 'Protocol' => $protocol,
                 'RouteConfig' => $routes,
@@ -66,6 +66,6 @@ trait ManagesCustomDomains
 
     public function deleteCustomDomain($domain)
     {
-        return $this->requestResource('DELETE', "/{$this->apiVersion}/custom-domains/{$domain}");
+        return $this->encapsulateRequest('DELETE', "/{$this->apiVersion}/custom-domains/{$domain}");
     }
 }
