@@ -13,7 +13,7 @@ trait ManagesBuckets
      */
     public function getInfo()
     {
-        return $this->encapsulateRequest('GET', '/?bucketInfo');
+        return $this->request('GET', '/?bucketInfo');
     }
 
     /**
@@ -23,7 +23,7 @@ trait ManagesBuckets
      */
     public function createBucket()
     {
-        return $this->encapsulateRequest('PUT', '/');
+        return $this->request('PUT', '/');
     }
 
     /**
@@ -33,6 +33,6 @@ trait ManagesBuckets
      */
     public function deleteBucket()
     {
-        return $this->encapsulateRequest('DELETE', '/');
+        return $this->request('DELETE', '/');
     }
 }

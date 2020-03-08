@@ -8,7 +8,7 @@ trait ManagesServices
 {
     public function getServices()
     {
-        return $this->encapsulateRequest('GET', '/');
+        return $this->request('GET', '/');
     }
 
     // public function getSignedUrlForGetServices()

@@ -12,7 +12,7 @@ trait GeneratesSignedUrls
     {
         $signature = $this->signForQueryString(
             'GET', $date = time() + 300,
-            sprintf('/%s/%s', $this->options['bucket_name'], $filename)
+            sprintf('/%s/%s', $this->getBucketName(), $filename)
         );
 
         $query = http_build_query([
@@ -22,21 +22,21 @@ trait GeneratesSignedUrls
             // 'security-token' => $secToken,
         ]);
 
-        return sprintf('https://%s/%s?%s', $this->options['endpoint'], $filename, $query);
+        return sprintf('%s/%s?%s', $this->getBaseUri(), $filename, $query);
     }
 
     public function getSignedUrlForPuttingObject(string $filename, string $secToken)
     {
         $signature = $this->signForQueryString(
             'PUT', $date = time() + 300,
-            sprintf('/%s/%s?security-token=%s', $this->options['bucket_name'], $filename, $secToken)
+            sprintf('/%s/%s?security-token=%s', $this->getBucketName(), $filename, $secToken)
         );
 
         // $calculator = new SignatureCalculator('sha1', $this->options['access_key_secret']);
 
         // $signature = $calculator->calculate(
         //     'PUT', $md5 = '', $contentType = '', $date = time() + 300, [],
-        //     sprintf('/%s/%s?security-token=%s', $this->options['bucket_name'], $filename, $secToken),
+        //     sprintf('/%s/%s?security-token=%s', $this->getBucketName(), $filename, $secToken),
         // );
 
         $query = http_build_query([
@@ -46,6 +46,6 @@ trait GeneratesSignedUrls
             'security-token' => $secToken,
         ]);
 
-        return sprintf('https://%s/%s?%s', $this->options['endpoint'], $filename, $query);
+        return sprintf('%s/%s?%s', $this->getBaseUri(), $filename, $query);
     }
 }

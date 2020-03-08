@@ -9,7 +9,7 @@ use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    public function encapsulateRequest(array $params)
+    public function request(array $params)
     {
         $query = array_merge([
             'Format' => 'JSON',
@@ -27,9 +27,9 @@ trait EncapsulatesRequests
         return $this->send('POST', '/', compact('query'));
     }
 
-    // public function encapsulateRequest20180813(array $params)
+    // public function request20180813(array $params)
     // {
-    //     return $this->encapsulateRequest(array_merge($params, [
+    //     return $this->request(array_merge($params, [
     //         'Version' => '2018-08-13',
     //     ]));
     // }

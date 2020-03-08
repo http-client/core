@@ -8,13 +8,13 @@ trait ManagesProjects
 {
     public function createProject($projectName)
     {
-        return $this->encapsulateRequest('POST', '/', [
+        return $this->request('POST', '/', [
             'projectName' => $projectName,
         ]);
     }
 
     public function getProjects()
     {
-        return $this->encapsulateRequest('GET', '/');
+        return $this->request('GET', '/');
     }
 }

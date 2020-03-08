@@ -13,10 +13,15 @@ class ObjectStorageServiceBucket extends Client
         ObjectStorageServiceBucket\ManagesBuckets,
         ObjectStorageServiceBucket\ManagesObjects;
 
+    /**
+     * Get the name of the bucket.
+     *
+     * @return string
+     */
     public function getBucketName()
     {
-        preg_match('/http(s?):\/\/(\w+)./', $this->getBaseUri(), $matches);
+        preg_match('/^https?:\/\/(.*?)\./', $this->getBaseUri(), $matches);
 
-        return $matches[2];
+        return $matches[1];
     }
 }

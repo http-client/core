@@ -8,7 +8,7 @@ trait ManagesDBInstances
 {
     public function describeDBInstances($region)
     {
-        return $this->encapsulateRequest([
+        return $this->request([
             'Action' => 'DescribeDBInstances',
             'RegionId' => $region,
         ]);

@@ -17,7 +17,7 @@ class ResourceAccessManagementTest extends ClientTestCase
             'access_key_secret' => 'test-secret',
         ]);
 
-        $client->encapsulateRequest([
+        $client->request([
             'Foo' => 'Bar',
         ]);
 

@@ -8,7 +8,7 @@ trait ManagesSwitches
 {
     public function getSwitch($switchId, $region)
     {
-        return $this->encapsulateRequest([
+        return $this->request([
             'Action' => 'DescribeVSwitchAttributes',
             'RegionId' => $region,
             'VSwitchId' => $switchId,
@@ -17,7 +17,7 @@ trait ManagesSwitches
 
     public function createSwitch(array $params = [])
     {
-        return $this->encapsulateRequest(array_merge([
+        return $this->request(array_merge([
             'Action' => 'CreateVSwitch',
         ], $params));
     }

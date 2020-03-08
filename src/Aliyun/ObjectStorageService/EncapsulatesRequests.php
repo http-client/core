@@ -12,7 +12,7 @@ trait EncapsulatesRequests
 {
     // use CalculatesSignatureWithAlgoSha256;
 
-    public function encapsulateRequest($method, $resource, array $options = [])
+    public function request($method, $resource, array $options = [])
     {
         $headers = [
             // 'Host' => $this->options['endpoint'],

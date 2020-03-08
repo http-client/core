@@ -8,6 +8,6 @@ trait ManagesInfo
 {
     public function getInfo()
     {
-        return $this->encapsulateRequest('GET', '/', );
+        return $this->request('GET', '/', );
     }
 }

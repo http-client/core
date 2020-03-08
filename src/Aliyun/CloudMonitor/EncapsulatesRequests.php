@@ -9,7 +9,7 @@ use HttpClient\Support\Str;
 
 trait EncapsulatesRequests
 {
-    public function encapsulateRequest(array $parameters)
+    public function request(array $parameters)
     {
         $query = array_merge([
             'Format' => 'JSON',

@@ -8,7 +8,7 @@ use HttpClient\Exceptions\ResponseCastingErrorException;
 use Psr\Http\Message\ResponseInterface;
 use SimpleXMLElement;
 
-trait CastsResponse
+trait CastsResponsexx
 {
     /**
      * Casts response to string.

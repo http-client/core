@@ -6,12 +6,13 @@ namespace HttpClient\Aliyun\LogService;
 
 use HttpClient\Aliyun\CalculatesSignatureWithAlgoSha256;
 use HttpClient\Aliyun\Concerns\CalculatesAuthorizationSignature;
+use HttpClient\Aliyun\Signature\AuthorizationSignature;
 
 trait EncapsulatesRequests
 {
-    use CalculatesAuthorizationSignature;
+    // use CalculatesAuthorizationSignature;
 
-    protected function encapsulateRequest($method, $resource, array $json = [])
+    protected function request($method, $resource, array $json = [])
     {
         $ch = [
             'x-log-apiversion' => '0.6.0',
@@ -21,7 +22,7 @@ trait EncapsulatesRequests
 
         $contentType = $contentMD5 = '';
         $headers = [
-            'Host' => $this->options['endpoint'],
+            // 'Host' => $this->options['endpoint'],
             'Date' => $date = gmdate('D, d M Y H:i:s T'),
             // 'Content-Type' => $contentType = empty($json) ? '' : 'application/json',
             // 'Content-Length' => empty($json) ? '' : strlen(json_encode($json)),
@@ -33,12 +34,13 @@ trait EncapsulatesRequests
             $headers['Content-Length'] = strlen(json_encode($json));
             $headers['Content-MD5'] = $contentMD5 = strtoupper(md5(json_encode($json)));
         }
+        $headers['Authorization'] = sprintf('LOG %s:%s', $this->options['access_key_id'], AuthorizationSignature::sign($method, $contentMD5, $contentType, $date, $ch, $resource, $this->options['access_key_secret']));
 
-        $headers['Authorization'] = 'LOG '.$this->options['access_key_id'].':'.$this->calculateAuthorizationSignature(
-            $method, $contentMD5, $contentType, $date, $ch, $resource
-        );
+        // $headers['Authorization'] = 'LOG '.$this->options['access_key_id'].':'.$this->calculateAuthorizationSignature(
+        //     $method, $contentMD5, $contentType, $date, $ch, $resource
+        // );
 
-        return $this->request($method, $resource, [
+        return $this->send($method, $resource, [
             'headers' => $headers,
             'body' => empty($json) ? null : json_encode($json),
         ]);

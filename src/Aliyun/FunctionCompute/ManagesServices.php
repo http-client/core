@@ -18,7 +18,7 @@ trait ManagesServices
      */
     public function getService($name)
     {
-        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/services/{$name}");
+        return $this->request('GET', "/{$this->apiVersion}/services/{$name}");
     }
 
     /**
@@ -28,7 +28,7 @@ trait ManagesServices
      */
     public function getServices()
     {
-        return $this->encapsulateRequest('GET', "/{$this->apiVersion}/services");
+        return $this->request('GET', "/{$this->apiVersion}/services");
     }
 
     /**
@@ -38,7 +38,7 @@ trait ManagesServices
      */
     public function createService(array $params)
     {
-        return $this->encapsulateRequest('POST', "/{$this->apiVersion}/services", ['json' => $params]);
+        return $this->request('POST', "/{$this->apiVersion}/services", ['json' => $params]);
     }
 
     /**
@@ -50,7 +50,7 @@ trait ManagesServices
      */
     public function updateService(string $name, array $params)
     {
-        return $this->encapsulateRequest('PUT', "/{$this->apiVersion}/services/{$name}", ['json' => $params]);
+        return $this->request('PUT', "/{$this->apiVersion}/services/{$name}", ['json' => $params]);
     }
 
     /**
@@ -62,6 +62,6 @@ trait ManagesServices
      */
     public function deleteService(string $name)
     {
-        return $this->encapsulateRequest('DELETE', "/{$this->apiVersion}/services/{$name}");
+        return $this->request('DELETE', "/{$this->apiVersion}/services/{$name}");
     }
 }

@@ -19,11 +19,4 @@ class NetworkAttachedStorage extends Client
     // NetworkAttachedStorage\ManagesSnapshotPolicies,
     // NetworkAttachedStorage\ManagesSnapshotTasks,
     // NetworkAttachedStorage\ManagesTags;
-
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-
-        $this->setBaseUri('https://'.$this->options['endpoint']);
-    }
 }

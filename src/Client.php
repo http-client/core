@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace HttpClient;
 
 use GuzzleHttp\Client as GuzzleHttp;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
-use HttpClient\Concerns\InteractsWithExceptionHandling;
-use HttpClient\Concerns\ResponseCastable;
+use HttpClient\Concerns\ResolvesCache;
+use HttpClient\Concerns\ResolvesLogger;
 use HttpClient\Testing\FakesRequests;
 use HttpClient\Testing\RecordsRequests;
 
 class Client
 {
-    use ResponseCastable, InteractsWithExceptionHandling,
-        FakesRequests, RecordsRequests;
+    use FakesRequests, RecordsRequests, ResolvesCache, ResolvesLogger;
 
     /**
      * Base URI of the http client.
@@ -30,6 +28,13 @@ class Client
      * @var \Psr\Http\Client\ClientInterface
      */
     protected $httpClient;
+
+    /**
+     * The transfer stats for the request.
+     *
+     * \GuzzleHttp\TransferStats
+     */
+    protected $transferStats;
 
     /**
      * @var array
@@ -53,32 +58,44 @@ class Client
      */
     public function send(string $method, string $uri = '', array $options = [])
     {
-        return $this->withExceptionHandling(function () use ($method, $uri, $options) {
-            return $this->castResponse($this->getHttpClient()->request($method, $uri, $options));
-        });
+        return $this->castResponse(
+            $this->getHttpClient()->request($method, $uri, $options)
+        );
     }
 
     /**
-     * @ignore
+     * @return callable
+     */
+    protected function castResponseUsing()
+    {
+        return function ($response) {
+            return new Response($response, $this->transferStats);
+        };
+    }
+
+    /**
+     * @param \Psr\Http\Message\ResponseInterface $response
      *
-     * @return $this
+     * @return mixed
      */
-    public function setHttpClient(ClientInterface $client)
+    public function castResponse($response)
     {
-        $this->httpClient = $client;
-
-        return $this;
+        return call_user_func_array($this->castResponseUsing(), [$response]);
     }
 
     /**
-     * @ignore
+     * @return \GuzzleHttp\ClientInterface
      */
-    public function getHttpClient(): ClientInterface
+    public function getHttpClient()
     {
-        return $this->httpClient ?: $this->httpClient = new GuzzleHttp(array_merge([
+        return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
+            'http_errors' => false,
             'base_uri' => $this->baseUri,
             'handler' => $this->getHandlerStack(),
-        ], []));
+            'on_stats' => function ($stats) {
+                $this->transferStats = $stats;
+            },
+        ]);
     }
 
     /**
@@ -119,10 +136,25 @@ class Client
     {
         $stack = HandlerStack::create();
 
+        $stack->push($this->loggerHandler());
         $stack->push($this->recorderHandler());
         $stack->push($this->fakerHandler());
 
+        $this->apply($stack);
+
         return $stack;
+    }
+
+    /**
+     * Apply to handler stack
+     *
+     * @param \GuzzleHttp\HandlerStack $stack
+     *
+     * @return void
+     */
+    protected function apply($stack)
+    {
+        //
     }
 
     public static function unfake()

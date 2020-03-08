@@ -14,7 +14,7 @@ trait ManagesRoles
     {
         // $policy = '{"Statement": [{"Action": ["*"],"Effect": "Allow","Resource": ["*"]}],"Version":"1"}';
 
-        return $this->encapsulateRequest([
+        return $this->request([
             'Action' => 'AssumeRole',
             'RoleArn' => $arn,
             'RoleSessionName' => $sessionName,

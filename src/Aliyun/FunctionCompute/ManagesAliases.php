@@ -19,7 +19,7 @@ trait ManagesAliases
      */
     public function getAlias(string $serviceName, string $aliasName)
     {
-        return $this->encapsulateRequest(
+        return $this->request(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/aliases/{$aliasName}"
         );
     }
@@ -33,7 +33,7 @@ trait ManagesAliases
      */
     public function getAliases(string $serviceName)
     {
-        return $this->encapsulateRequest(
+        return $this->request(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/aliases"
         );
     }
@@ -58,7 +58,7 @@ trait ManagesAliases
             'additionalVersionWeight' => $additionalVersionWeight,
         ];
 
-        return $this->encapsulateRequest(
+        return $this->request(
             'POST', "/{$this->apiVersion}/services/{$serviceName}/aliases", compact('json')
         );
     }
@@ -81,7 +81,7 @@ trait ManagesAliases
             'additionalVersionWeight' => $additionalVersionWeight,
         ];
 
-        return $this->encapsulateRequest(
+        return $this->request(
             'PUT', "/{$this->apiVersion}/services/{$serviceName}/aliases/{$aliasName}", compact('json')
         );
     }
@@ -96,7 +96,7 @@ trait ManagesAliases
      */
     public function deleteAlias(string $serviceName, string $aliasName)
     {
-        return $this->encapsulateRequest(
+        return $this->request(
             'DELETE', "/{$this->apiVersion}/services/{$serviceName}/aliases/{$aliasName}"
         );
     }

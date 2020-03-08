@@ -8,16 +8,16 @@ trait ManagesObjects
 {
     public function headObject($objectName)
     {
-        return $this->encapsulateRequest('HEAD', '/'.$objectName);
+        return $this->request('HEAD', '/'.$objectName);
     }
 
     public function getObject($objectName)
     {
-        return $this->encapsulateRequest('GET', '/'.$objectName);
+        return $this->request('GET', '/'.$objectName);
     }
 
     public function putObject($objectName, $body)
     {
-        return $this->encapsulateRequest('PUT', '/'.$objectName, ['body' => $body]);
+        return $this->request('PUT', '/'.$objectName, ['body' => $body]);
     }
 }

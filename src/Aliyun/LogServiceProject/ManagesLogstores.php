@@ -8,12 +8,12 @@ trait ManagesLogstores
 {
     public function getLogstore($name)
     {
-        return $this->encapsulateRequest('GET', "/logstores/{$name}");
+        return $this->request('GET', "/logstores/{$name}");
     }
 
     public function createLogstore($name, $ttl, $shardCount)
     {
-        return $this->encapsulateRequest('POST', '/logstores', [
+        return $this->request('POST', '/logstores', [
             'logstoreName' => $name,
             'ttl' => $ttl,
             'shardCount' => $shardCount,

@@ -8,7 +8,7 @@ use HttpClient\Aliyun\Signature\AuthorizationSignature;
 
 trait EncapsulatesRequests
 {
-    public function encapsulateRequest($method, $resource, array $options = [], array $canonicalizedHeaders = [])
+    public function request($method, $resource, array $options = [], array $canonicalizedHeaders = [])
     {
         if (isset($this->options['security_token'])) {
             $canonicalizedHeaders = array_merge($canonicalizedHeaders, ['x-fc-security-token' => $this->options['security_token']]);

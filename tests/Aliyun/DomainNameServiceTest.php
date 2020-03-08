@@ -17,7 +17,7 @@ class DomainNameServiceTest extends ClientTestCase
             'access_key_secret' => 'test-access-key-secret',
         ]);
 
-        $response = $client->encapsulateRequest([
+        $response = $client->request([
             'Foo' => 'Bar',
         ]);
 
