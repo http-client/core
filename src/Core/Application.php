@@ -30,6 +30,7 @@ class Application extends Container
             $this->setBaseUri($this['options']['http']['base_uri']);
         }
 
+        $this->boot();
         $this->registerProviders();
     }
 
@@ -57,6 +58,14 @@ class Application extends Container
         return $this->baseUri;
     }
 
+
+    /**
+     * @return void
+     */
+    protected function boot()
+    {
+        //
+    }
 
     protected function registerProviders()
     {

@@ -4,8 +4,11 @@ require 'vendor/autoload.php';
 
 
 
+\HttpClient\Aliyun\Factory::foo();
+
 // $oss = new HttpClient\Aliyun\ObjectStorageService\Application($options);
-$fc = new HttpClient\Aliyun\FunctionCompute\Application($options);
+// $fc = new HttpClient\Aliyun\FunctionCompute\Application($options);
+$nas = new HttpClient\Aliyun\NetworkAttachedStorage\Application($options);
 // $response = $oss->service->list();
 // $ossBucket = $oss->bucket();
 // $response = $oss->bucket('weforge')->info();
@@ -24,9 +27,15 @@ $fc = new HttpClient\Aliyun\FunctionCompute\Application($options);
 // $response = $fc->alias->get('weforge-qqq', 'staging');
 // $response = $fc->trigger->list('weforge-qqq', 'staging');
 
+// $response = $nas->region->list();
+// $response = $nas->region->zones('cn-shenzhen');
+// $response = $nas->filesystem->list();
+$response = $nas->access_group->list();
+
+
 // var_dump($response->getInfo());
 // var_dump($response['Owner']);die;
 // echo $response;
-var_dump($response->toArray());
+dump($response->toArray());
 // echo $response->getStatusCode();
 // var_dump($response->headers());
