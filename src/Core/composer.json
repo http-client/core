@@ -1,9 +1,6 @@
 {
-    "name": "http-client/aliyun",
+    "name": "http-client/core",
     "description": "",
-    "keywords": [
-        "aliyun"
-    ],
     "homepage": "https://http-client.com",
     "authors": [
         {
@@ -12,12 +9,11 @@
         }
     ],
     "require": {
-        "php": "^7.2",
-        "http-client/core": "*"
+        "php": "^7.2"
     },
     "autoload": {
         "psr-4": {
-            "HttpClient\\Aliyun\\": ""
+            "HttpClient\\Core\\": ""
         }
     },
     "minimum-stability": "dev",
