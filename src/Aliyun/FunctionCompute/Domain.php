@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\FunctionCompute;
 
-/**
- * @group 自定义域名管理
- */
-trait ManagesCustomDomains
+class Domain extends Client
 {
     /**
      * 自定义域名详情
@@ -16,7 +13,7 @@ trait ManagesCustomDomains
      *
      * @return mixed
      */
-    public function getCustomDomain(string $domain)
+    public function get(string $domain)
     {
         return $this->request('GET', "/{$this->apiVersion}/custom-domains/{$domain}");
     }
@@ -26,7 +23,7 @@ trait ManagesCustomDomains
      *
      * @return mixed
      */
-    public function getCustomDomains()
+    public function list()
     {
         return $this->request('GET', "/{$this->apiVersion}/custom-domains");
     }
@@ -41,7 +38,7 @@ trait ManagesCustomDomains
      *
      * @return mixed
      */
-    public function createCustomDomain($domain, $protocol, array $routes = [], array $certs = [])
+    public function create($domain, $protocol, array $routes = [], array $certs = [])
     {
         return $this->request('POST', "/{$this->apiVersion}/custom-domains", [
             'json' => array_filter([
@@ -53,7 +50,7 @@ trait ManagesCustomDomains
         ]);
     }
 
-    public function updateCustomDomain($domain, $protocol, array $routes = [], array $certs = [])
+    public function update($domain, $protocol, array $routes = [], array $certs = [])
     {
         return $this->request('PUT', "/{$this->apiVersion}/custom-domains/{$domain}", [
             'json' => array_filter([
@@ -64,7 +61,7 @@ trait ManagesCustomDomains
         ]);
     }
 
-    public function deleteCustomDomain($domain)
+    public function delete($domain)
     {
         return $this->request('DELETE', "/{$this->apiVersion}/custom-domains/{$domain}");
     }

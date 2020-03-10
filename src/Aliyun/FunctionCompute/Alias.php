@@ -7,7 +7,7 @@ namespace HttpClient\Aliyun\FunctionCompute;
 /**
  * @group 别名管理
  */
-trait ManagesAliases
+class Alias extends Client
 {
     /**
      * 获取别名
@@ -17,7 +17,7 @@ trait ManagesAliases
      *
      * @return mixed
      */
-    public function getAlias(string $serviceName, string $aliasName)
+    public function get($serviceName, $aliasName)
     {
         return $this->request(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/aliases/{$aliasName}"
@@ -31,7 +31,7 @@ trait ManagesAliases
      *
      * @return mixed
      */
-    public function getAliases(string $serviceName)
+    public function list($serviceName)
     {
         return $this->request(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/aliases"
@@ -45,11 +45,11 @@ trait ManagesAliases
      * @param string      $aliasName               别名名称
      * @param string      $versionId               版本 ID
      * @param string|null $description             别名描述
-     * @param int         $additionalVersionWeight 权重吧
+     * @param int         $additionalVersionWeight 权重
      *
      * @return mixed
      */
-    public function createAlias(string $serviceName, string $aliasName, $versionId, string $description = null, $additionalVersionWeight = null)
+    public function create($serviceName, $aliasName, $versionId, $description = null, $additionalVersionWeight = null)
     {
         $json = [
             'aliasName' => $aliasName,
@@ -73,7 +73,7 @@ trait ManagesAliases
      *
      * @return mixed
      */
-    public function updateAlias(string $serviceName, string $aliasName, $versionId, string $description = null, $additionalVersionWeight = null)
+    public function update($serviceName, $aliasName, $versionId, $description = null, $additionalVersionWeight = null)
     {
         $json = [
             'versionId' => (string) $versionId,
@@ -94,7 +94,7 @@ trait ManagesAliases
      *
      * @return mixed
      */
-    public function deleteAlias(string $serviceName, string $aliasName)
+    public function delete($serviceName, $aliasName)
     {
         return $this->request(
             'DELETE', "/{$this->apiVersion}/services/{$serviceName}/aliases/{$aliasName}"

@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\ObjectStorageServiceBucket;
 
-trait ManagesObjects
+use HttpClient\Aliyun\ObjectStorageService\Client;
+
+class BucketObject extends Client
 {
-    public function headObject($objectName)
+    public function head($objectName)
     {
         return $this->request('HEAD', '/'.$objectName);
     }
 
-    public function getObject($objectName)
+    public function get($name)
     {
-        return $this->request('GET', '/'.$objectName);
+        return $this->request('GET', '/'.$name);
     }
 
-    public function putObject($objectName, $body)
+    public function put($objectName, $body)
     {
         return $this->request('PUT', '/'.$objectName, ['body' => $body]);
     }

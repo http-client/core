@@ -7,7 +7,7 @@ namespace HttpClient\Aliyun\FunctionCompute;
 /**
  * @group 函数管理
  */
-trait ManagesFunctions
+class ServiceFunction extends Client
 {
     /**
      * 获取函数详情
@@ -17,7 +17,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function getFunction(string $serviceName, string $functionName)
+    public function get($serviceName, $functionName)
     {
         return $this->request('GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
     }
@@ -29,7 +29,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function getFunctions(string $serviceName)
+    public function list($serviceName)
     {
         return $this->request('GET', "/{$this->apiVersion}/services/{$serviceName}/functions");
     }
@@ -41,7 +41,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function createFunction(string $serviceName, array $params)
+    public function create($serviceName, array $params)
     {
         return $this->request('POST', "/{$this->apiVersion}/services/{$serviceName}/functions", ['json' => $params]);
     }
@@ -54,7 +54,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function updateFunction(string $serviceName, string $functionName, array $params)
+    public function update($serviceName, $functionName, array $params)
     {
         return $this->request('PUT', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}", ['json' => $params]);
     }
@@ -67,7 +67,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function deleteFunction(string $serviceName, string $functionName)
+    public function deleteFunction($serviceName, $functionName)
     {
         return $this->request('DELETE', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
     }
@@ -81,7 +81,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function invokeFunction(string $serviceName, string $functionName, array $body, bool $asynchronous = false)
+    public function invoke($serviceName, $functionName, array $body, bool $asynchronous = false)
     {
         return $this->request(
             'POST',
@@ -99,7 +99,7 @@ trait ManagesFunctions
      *
      * @return mixed
      */
-    public function invokeFunctionAsynchronously(string $serviceName, string $functionName, array $body)
+    public function invokeAsynchronously($serviceName, $functionName, array $body)
     {
         return $this->invokeFunction($serviceName, $functionName, $body, true);
     }

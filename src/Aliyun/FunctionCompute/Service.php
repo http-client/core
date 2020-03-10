@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\FunctionCompute;
 
-/**
- * @group 服务管理
- */
-trait ManagesServices
+class Service extends Client
 {
     /**
      * 获取服务信息
@@ -16,7 +13,7 @@ trait ManagesServices
      *
      * @return mixed
      */
-    public function getService($name)
+    public function get($name)
     {
         return $this->request('GET', "/{$this->apiVersion}/services/{$name}");
     }
@@ -26,7 +23,7 @@ trait ManagesServices
      *
      * @return mixed
      */
-    public function getServices()
+    public function list()
     {
         return $this->request('GET', "/{$this->apiVersion}/services");
     }
@@ -36,7 +33,7 @@ trait ManagesServices
      *
      * @return mixed
      */
-    public function createService(array $params)
+    public function create(array $params)
     {
         return $this->request('POST', "/{$this->apiVersion}/services", ['json' => $params]);
     }
@@ -48,7 +45,7 @@ trait ManagesServices
      *
      * @return mixed
      */
-    public function updateService(string $name, array $params)
+    public function update($name, array $params)
     {
         return $this->request('PUT', "/{$this->apiVersion}/services/{$name}", ['json' => $params]);
     }
@@ -60,7 +57,7 @@ trait ManagesServices
      *
      * @return mixed
      */
-    public function deleteService(string $name)
+    public function delete($name)
     {
         return $this->request('DELETE', "/{$this->apiVersion}/services/{$name}");
     }

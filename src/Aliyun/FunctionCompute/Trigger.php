@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\FunctionCompute;
 
-/**
- * @group 触发器管理
- */
-trait ManagesTriggers
+class Trigger extends Client
 {
     /**
      * 触发器详情
@@ -18,7 +15,7 @@ trait ManagesTriggers
      *
      * @return mixed
      */
-    public function getTrigger(string $serviceName, string $functionName, string $triggerName)
+    public function get($serviceName, $functionName, $triggerName)
     {
         return $this->request(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers/{$triggerName}"
@@ -33,7 +30,7 @@ trait ManagesTriggers
      *
      * @return mixed
      */
-    public function getTriggers(string $serviceName, string $functionName)
+    public function list($serviceName, $functionName)
     {
         return $this->request(
             'GET', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers"
@@ -48,7 +45,7 @@ trait ManagesTriggers
      *
      * @return mixed
      */
-    public function createTrigger(string $serviceName, string $functionName, array $json)
+    public function create($serviceName, $functionName, array $json)
     {
         return $this->request(
             'POST', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers", compact('json')
@@ -64,7 +61,7 @@ trait ManagesTriggers
      *
      * @return mixed
      */
-    public function updateTrigger(string $serviceName, string $functionName, string $triggerName, array $json)
+    public function update($serviceName, $functionName, $triggerName, array $json)
     {
         return $this->request(
             'PUT', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers/{$triggerName}", compact('json')
@@ -80,7 +77,7 @@ trait ManagesTriggers
      *
      * @return mixed
      */
-    public function deleteTrigger(string $serviceName, string $functionName, string $triggerName)
+    public function delete($serviceName, $functionName, $triggerName)
     {
         return $this->request(
             'DELETE', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}/triggers/{$triggerName}"

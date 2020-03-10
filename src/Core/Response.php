@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HttpClient;
+namespace HttpClient\Core;
 
 use ArrayAccess;
 use HttpClient\Exceptions\RequestException;
@@ -18,18 +18,11 @@ class Response implements ArrayAccess
     protected $response;
 
     /**
-     * The transfer stats for the request.
-     *
-     * \GuzzleHttp\TransferStats
-     */
-    public $transferStats;
-
-    /**
      * The body of the response.
      *
      * @var string
      */
-    public $body;
+    // public $body;
 
     /**
      * Create a new response instance.
@@ -41,7 +34,7 @@ class Response implements ArrayAccess
     public function __construct($response)
     {
         $this->response = $response;
-        $this->body = (string) $this->response->getBody();
+        // $this->body = $this->response->getContent();
     }
 
     /**
@@ -113,6 +106,11 @@ class Response implements ArrayAccess
         throw new LogicException('Response data may not be mutated using array access.');
     }
 
+    public function headers()
+    {
+        return $this->getHeaders(false);
+    }
+
     /**
      * Get the array of the response.
      *
@@ -120,15 +118,15 @@ class Response implements ArrayAccess
      */
     public function toArray()
     {
-        if (strpos($this->body, '<?xml') !== false) {
+        if (($this->getHeaders()['content-type'][0] ?? null) === 'application/xml') {
             $previous = libxml_disable_entity_loader(true);
-            $values = json_decode(json_encode(simplexml_load_string($this->body, \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
+            $values = json_decode(json_encode(simplexml_load_string($this->__toString(), \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
             libxml_disable_entity_loader($previous);
 
             return $values;
         }
 
-        return json_decode($this->body, true);
+        return $this->response->toArray(false);
     }
 
     /**
@@ -138,7 +136,7 @@ class Response implements ArrayAccess
      */
     public function __toString()
     {
-        return $this->body;
+        return $this->getContent(false);
     }
 
     /**

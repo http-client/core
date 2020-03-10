@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HttpClient;
+namespace HttpClient\Core;
 
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\HandlerStack;
@@ -10,18 +10,11 @@ use HttpClient\Concerns\ResolvesCache;
 use HttpClient\Concerns\ResolvesLogger;
 use HttpClient\Testing\FakesRequests;
 use HttpClient\Testing\RecordsRequests;
+use Symfony\Component\HttpClient\HttpClient;
 
 class Client
 {
-    use FakesRequests, RecordsRequests, ResolvesCache, ResolvesLogger;
-
-    /**
-     * Base URI of the http client.
-     *
-     * @var string
-     */
-    protected $baseUri;
-
+    // use FakesRequests, RecordsRequests, ResolvesCache, ResolvesLogger;
     /**
      * The GuzzleHttp client instance.
      *
@@ -39,14 +32,14 @@ class Client
     /**
      * @var array
      */
-    protected $options;
+    protected $app;
 
     /**
      * HttpClient constructor.
      */
-    public function __construct(array $options = [])
+    public function __construct($app)
     {
-        $this->options = $options;
+        $this->app = $app;
     }
 
     /**
@@ -58,6 +51,7 @@ class Client
      */
     public function send(string $method, string $uri = '', array $options = [])
     {
+        // var_dump($options);die;
         return $this->castResponse(
             $this->getHttpClient()->request($method, $uri, $options)
         );
@@ -68,13 +62,8 @@ class Client
      */
     protected function castResponseUsing()
     {
-        return function ($r) {
-            $response = new Response($r);
-
-            $response->transferStats = $this->transferStats;
-            $response->throw();
-
-            return $response;
+        return function ($response) {
+            return new Response($response);
         };
     }
 
@@ -85,6 +74,7 @@ class Client
      */
     public function castResponse($response)
     {
+        // return $response;
         return call_user_func_array($this->castResponseUsing(), [$response]);
     }
 
@@ -93,38 +83,15 @@ class Client
      */
     public function getHttpClient()
     {
-        return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
-            'http_errors' => false,
-            'base_uri' => $this->baseUri,
-            'handler' => $this->getHandlerStack(),
-            'on_stats' => function ($stats) {
-                $this->transferStats = $stats;
-            },
-        ]);
-    }
-
-    /**
-     * @param string $uri
-     *
-     * @ignore
-     *
-     * @return $this
-     */
-    public function setBaseUri($uri)
-    {
-        $this->baseUri = $uri;
-
-        return $this;
-    }
-
-    /**
-     * @ignore
-     *
-     * @return string
-     */
-    public function getBaseUri()
-    {
-        return $this->baseUri;
+        return HttpClient::createForBaseUri($this->app->getBaseUri());
+        // return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
+        //     'http_errors' => false,
+        //     'base_uri' => $this->baseUri,
+        //     'handler' => $this->getHandlerStack(),
+        //     'on_stats' => function ($stats) {
+        //         $this->transferStats = $stats;
+        //     },
+        // ]);
     }
 
     /**
