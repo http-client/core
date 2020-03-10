@@ -12,11 +12,4 @@ class LogServiceProject extends Client
         LogServiceProject\ManagesInfo,
         LogServiceProject\ManagesLogs,
         LogServiceProject\ManagesLogstores;
-
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-
-        $this->setBaseUri('https://'.$this->options['endpoint']);
-    }
 }

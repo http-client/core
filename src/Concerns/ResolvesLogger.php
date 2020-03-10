@@ -20,12 +20,21 @@ trait ResolvesLogger
      */
     protected $resolveLoggerUsing;
 
+    protected $loggerMessageFormat;
+
     /**
      * @return $this
      */
     public function resolveLoggerUsing(callable $callback)
     {
         $this->resolveLoggerUsing = $callback;
+
+        return $this;
+    }
+
+    public function setLoggerMessageFormat($template)
+    {
+        $this->loggerMessageFormat = $template;
 
         return $this;
     }
@@ -53,6 +62,6 @@ trait ResolvesLogger
      */
     protected function loggerHandler()
     {
-        return Middleware::log($this->logger(), new MessageFormatter);
+        return Middleware::log($this->logger(), new MessageFormatter($this->loggerMessageFormat ?: MessageFormatter::DEBUG));
     }
 }

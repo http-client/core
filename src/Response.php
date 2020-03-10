@@ -25,38 +25,39 @@ class Response implements ArrayAccess
     public $transferStats;
 
     /**
-     * The decoded response.
+     * The body of the response.
      *
-     * @var array
+     * @var string
      */
-    protected $array;
+    public $body;
 
     /**
      * Create a new response instance.
      *
      * @param \Psr\Http\Message\ResponseInterface $response
-     * @param \GuzzleHttp\TransferStats           $transferStats
      *
      * @return mixed
      */
-    public function __construct($response, $transferStats)
+    public function __construct($response)
     {
         $this->response = $response;
-        $this->transferStats = $transferStats;
-
-        if ($this->getStatusCode() >= 400) {
-            throw new RequestException($this);
-        }
+        $this->body = (string) $this->response->getBody();
     }
 
     /**
-     * Get the body of the response.
+     * Throw an exception if a server or client error occurred.
      *
-     * @return string
+     * @return $this
+     *
+     * @throws \HttpClient\Exceptions\RequestException
      */
-    public function body()
+    public function throw()
     {
-        return (string) $this->response->getBody();
+        if ($this->getStatusCode() >= 400) {
+            throw new RequestException($this);
+        }
+
+        return $this;
     }
 
     /**
@@ -119,11 +120,15 @@ class Response implements ArrayAccess
      */
     public function toArray()
     {
-        if (!$this->array) {
-            $this->array = json_decode((string) $this->response->getBody(), true);
+        if (strpos($this->body, '<?xml') !== false) {
+            $previous = libxml_disable_entity_loader(true);
+            $values = json_decode(json_encode(simplexml_load_string($this->body, \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
+            libxml_disable_entity_loader($previous);
+
+            return $values;
         }
 
-        return $this->array;
+        return json_decode($this->body, true);
     }
 
     /**
@@ -133,7 +138,7 @@ class Response implements ArrayAccess
      */
     public function __toString()
     {
-        return $this->body();
+        return $this->body;
     }
 
     /**

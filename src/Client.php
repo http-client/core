@@ -68,8 +68,13 @@ class Client
      */
     protected function castResponseUsing()
     {
-        return function ($response) {
-            return new Response($response, $this->transferStats);
+        return function ($r) {
+            $response = new Response($r);
+
+            $response->transferStats = $this->transferStats;
+            $response->throw();
+
+            return $response;
         };
     }
 
