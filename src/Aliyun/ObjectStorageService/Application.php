@@ -1,24 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HttpClient\Aliyun\ObjectStorageService;
 
 use HttpClient\Core\Application as BaseApplication;
-use HttpClient\Aliyun\ObjectStorageServiceBucket\Application as ObjectStorageServiceBucket;
 
 class Application extends BaseApplication
 {
-    protected $providers = [
-        ServiceProvider::class,
-    ];
+    /**
+     * @return void
+     */
+    protected function boot()
+    {
+        $this['service'] = function ($pimple) {
+            return new Service($pimple);
+        };
+    }
 
     public function bucket($name)
     {
-        $parsed = parse_url($this->getBaseUri());
-
-        $baseUri = sprintf('%s://%s', $parsed['scheme'], $name.'.'.$parsed['host']);
-
-        return new ObjectStorageServiceBucket(
-            array_merge($this->options, ['bucket' => $name, 'http' => ['base_uri' => $baseUri]])
-        );
+        return new BucketApplication(array_merge($this['options'], [
+            'bucket' => $name,
+            'http' => [
+                'base_uri' => $this->prependBaseUri($name),
+            ],
+        ]));
     }
 }

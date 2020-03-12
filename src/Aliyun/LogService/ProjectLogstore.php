@@ -2,27 +2,23 @@
 
 declare(strict_types=1);
 
-namespace HttpClient\Aliyun\LogServiceProject;
+namespace HttpClient\Aliyun\LogService;
 
-use HttpClient\Aliyun\LogService\Client;
-
-class Logstore extends Client
+class ProjectLogstore extends Client
 {
-    public function getLogstore($name)
+    public function get($name)
     {
         return $this->request('GET', "/logstores/{$name}");
     }
 
-    public function createLogstore($name, $ttl, $shardCount)
+    public function create($name, array $params = [])
     {
         return $this->request('POST', '/logstores', [
             'logstoreName' => $name,
-            'ttl' => $ttl,
-            'shardCount' => $shardCount,
-        ]);
+        ] + $params);
     }
 
-    public function getLogstores()
+    public function list()
     {
         $headers = $this->authenticateWithHeaders('GET', $resource = '/logstores');
 

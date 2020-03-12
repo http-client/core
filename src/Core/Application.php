@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HttpClient\Core;
 
 use Pimple\Container;
 
 class Application extends Container
 {
-    protected $providers = [];
-
     /**
      * Base URI of the http client.
      *
@@ -31,7 +31,6 @@ class Application extends Container
         }
 
         $this->boot();
-        $this->registerProviders();
     }
 
     /**
@@ -58,7 +57,6 @@ class Application extends Container
         return $this->baseUri;
     }
 
-
     /**
      * @return void
      */
@@ -67,11 +65,11 @@ class Application extends Container
         //
     }
 
-    protected function registerProviders()
+    protected function prependBaseUri($value)
     {
-        foreach ($this->providers as $provider) {
-            $this->register(new $provider);
-        }
+        $parsed = parse_url($this->getBaseUri());
+
+        return sprintf('%s://%s', $parsed['scheme'], $value.'.'.$parsed['host']);
     }
 
     public function __get($name)

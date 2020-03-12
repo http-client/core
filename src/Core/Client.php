@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace HttpClient\Core;
 
-use GuzzleHttp\Client as GuzzleHttp;
-use GuzzleHttp\HandlerStack;
 use HttpClient\Concerns\ResolvesCache;
 use HttpClient\Concerns\ResolvesLogger;
 use HttpClient\Testing\FakesRequests;
@@ -15,19 +13,13 @@ use Symfony\Component\HttpClient\HttpClient;
 class Client
 {
     // use FakesRequests, RecordsRequests, ResolvesCache, ResolvesLogger;
-    /**
-     * The GuzzleHttp client instance.
-     *
-     * @var \Psr\Http\Client\ClientInterface
-     */
-    protected $httpClient;
 
     /**
-     * The transfer stats for the request.
+     * The http client instance.
      *
-     * \GuzzleHttp\TransferStats
+     * @var \Symfony\Contracts\HttpClient\HttpClientInterface
      */
-    protected $transferStats;
+    protected $httpClient;
 
     /**
      * @var array
@@ -36,6 +28,8 @@ class Client
 
     /**
      * HttpClient constructor.
+     *
+     * @param \HttpClient\Core\Application $app
      */
     public function __construct($app)
     {
@@ -45,13 +39,10 @@ class Client
     /**
      * Make an http request.
      *
-     * @ignore
-     *
      * @return mixed
      */
     public function send(string $method, string $uri = '', array $options = [])
     {
-        // var_dump($options);die;
         return $this->castResponse(
             $this->getHttpClient()->request($method, $uri, $options)
         );
@@ -63,7 +54,11 @@ class Client
     protected function castResponseUsing()
     {
         return function ($response) {
-            return new Response($response);
+            $response = new Response($response);
+
+            $response->throw();
+
+            return $response;
         };
     }
 
@@ -72,66 +67,19 @@ class Client
      *
      * @return mixed
      */
-    public function castResponse($response)
+    protected function castResponse($response)
     {
-        // return $response;
         return call_user_func_array($this->castResponseUsing(), [$response]);
     }
 
     /**
-     * @return \GuzzleHttp\ClientInterface
+     * Resolve a http client.
+     *
+     * @return \Symfony\Contracts\HttpClient\HttpClientInterface
      */
     public function getHttpClient()
     {
-        return HttpClient::createForBaseUri($this->app->getBaseUri());
-        // return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
-        //     'http_errors' => false,
-        //     'base_uri' => $this->baseUri,
-        //     'handler' => $this->getHandlerStack(),
-        //     'on_stats' => function ($stats) {
-        //         $this->transferStats = $stats;
-        //     },
-        // ]);
-    }
-
-    /**
-     * @ignore
-     *
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    protected function getHandlerStack(): HandlerStack
-    {
-        $stack = HandlerStack::create();
-
-        $stack->push($this->loggerHandler());
-        $stack->push($this->recorderHandler());
-        $stack->push($this->fakerHandler());
-
-        $this->apply($stack);
-
-        return $stack;
-    }
-
-    /**
-     * Apply to handler stack
-     *
-     * @param \GuzzleHttp\HandlerStack $stack
-     *
-     * @return void
-     */
-    protected function apply($stack)
-    {
-        //
-    }
-
-    public static function unfake()
-    {
-        static::$fakers = [];
-        static::$records = [];
+        return $this->httpClient
+            ?: $this->httpClient = HttpClient::create(['base_uri' => $this->app->getBaseUri()]);
     }
 }

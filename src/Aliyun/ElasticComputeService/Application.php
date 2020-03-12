@@ -20,6 +20,8 @@ class Application extends BaseApplication
      */
     protected function boot()
     {
-        //
+        $this['security_group'] = function ($pimple) {
+            return new SecurityGroup($pimple);
+        };
     }
 }

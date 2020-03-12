@@ -16,8 +16,8 @@
     ],
     "require": {
         "php": "^7.2",
-        "symfony/http-client": "^5.0",
-        "pimple/pimple": "^3.3"
+        "pimple/pimple": "^3.3",
+        "symfony/http-client": "^5.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.3",

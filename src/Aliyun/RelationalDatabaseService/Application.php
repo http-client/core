@@ -20,8 +20,16 @@ class Application extends BaseApplication
      */
     protected function boot()
     {
+        $this['instance'] = function ($pimple) {
+            return new Instance($pimple);
+        };
+
         $this['database'] = function ($pimple) {
             return new Database($pimple);
+        };
+
+        $this['account'] = function ($pimple) {
+            return new Account($pimple);
         };
     }
 }

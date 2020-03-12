@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace HttpClient\Aliyun\LogService;
 
 use HttpClient\Aliyun\CalculatesSignatureWithAlgoSha256;
-use HttpClient\Aliyun\Concerns\CalculatesAuthorizationSignature;
 use HttpClient\Aliyun\Signature\AuthorizationSignature;
 use HttpClient\Core\Client as BaseClient;
 

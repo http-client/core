@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HttpClient\Aliyun\ObjectStorageService;
 
 use HttpClient\Aliyun\Signature\AuthorizationSignature;

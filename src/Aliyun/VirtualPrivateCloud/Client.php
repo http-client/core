@@ -8,7 +8,7 @@ use HttpClient\Aliyun\Signature\RpcSignature;
 use HttpClient\Core\Client as BaseClient;
 use HttpClient\Support\Str;
 
-class Client extends Client
+class Client extends BaseClient
 {
     public function request(array $params)
     {

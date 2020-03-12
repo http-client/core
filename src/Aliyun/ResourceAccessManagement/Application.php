@@ -20,6 +20,8 @@ class Application extends BaseApplication
      */
     protected function boot()
     {
-        //
+        $this['role'] = function ($pimple) {
+            return new Role($pimple);
+        };
     }
 }

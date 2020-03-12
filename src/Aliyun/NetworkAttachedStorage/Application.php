@@ -8,7 +8,29 @@ use HttpClient\Core\Application as BaseApplication;
 
 class Application extends BaseApplication
 {
-    protected $providers = [
-        ServiceProvider::class,
-    ];
+    /**
+     * @return array
+     */
+    protected function boot()
+    {
+        $this['region'] = function ($pimple) {
+            return new Region($pimple);
+        };
+
+        $this['filesystem'] = function ($pimple) {
+            return new Filesystem($pimple);
+        };
+
+        $this['access_group'] = function ($pimple) {
+            return new AccessGroup($pimple);
+        };
+
+        $this['access_rule'] = function ($pimple) {
+            return new AccessRule($pimple);
+        };
+
+        $this['mount_target'] = function ($pimple) {
+            return new MountTarget($pimple);
+        };
+    }
 }

@@ -6,11 +6,11 @@ namespace HttpClient\Aliyun\RelationalDatabaseService;
 
 class Database extends Client
 {
-    public function describeDBInstances($region)
+    public function list($instanceId, array $params = [])
     {
         return $this->request([
-            'Action' => 'DescribeDBInstances',
-            'RegionId' => $region,
-        ]);
+            'Action' => 'DescribeDatabases',
+            'DBInstanceId' => $instanceId,
+        ] + $params);
     }
 }

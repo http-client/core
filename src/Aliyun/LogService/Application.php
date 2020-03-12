@@ -17,4 +17,14 @@ class Application extends BaseApplication
             return new Project($pimple);
         };
     }
+
+    public function project($name)
+    {
+        return new ProjectApplication(array_merge($this['options'], [
+            'bucket' => $name,
+            'http' => [
+                'base_uri' => $this->prependBaseUri($name),
+            ],
+        ]));
+    }
 }

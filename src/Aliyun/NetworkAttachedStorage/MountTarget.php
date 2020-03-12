@@ -8,7 +8,7 @@ class MountTarget extends Client
 {
     public function list($fileSystemId, array $params = [])
     {
-        return $this->encapsulatesRequest([
+        return $this->request([
             'Action' => 'DescribeMountTargets',
             'FileSystemId' => $fileSystemId,
         ] + $params);
@@ -16,7 +16,7 @@ class MountTarget extends Client
 
     public function create($fileSystemId, $networkType, $accessGroupName, array $params = [])
     {
-        return $this->encapsulatesRequest([
+        return $this->request([
             'Action' => 'CreateMountTarget',
             'AccessGroupName' => $accessGroupName,
             'FileSystemId' => $fileSystemId,
@@ -26,7 +26,7 @@ class MountTarget extends Client
 
     public function delete($fileSystemId, $mountTargetDomain)
     {
-        return $this->encapsulatesRequest([
+        return $this->request([
             'Action' => 'DeleteMountTarget',
             'FileSystemId' => $fileSystemId,
             'MountTargetDomain' => $mountTargetDomain,
@@ -35,7 +35,7 @@ class MountTarget extends Client
 
     public function update($fileSystemId, $mountTargetDomain, array $params = [])
     {
-        return $this->encapsulatesRequest([
+        return $this->request([
             'Action' => 'ModifyMountTarget',
             'FileSystemId' => $fileSystemId,
             'MountTargetDomain' => $mountTargetDomain,

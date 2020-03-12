@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HttpClient\Aliyun\ObjectStorageServiceBucket;
-
-use HttpClient\Aliyun\ObjectStorageService\Client;
+namespace HttpClient\Aliyun\ObjectStorageService;
 
 class BucketObject extends Client
 {

@@ -5,36 +5,28 @@ declare(strict_types=1);
 namespace HttpClient\Core;
 
 use ArrayAccess;
-use HttpClient\Exceptions\RequestException;
+use JsonSerializable;
 use LogicException;
 
-class Response implements ArrayAccess
+class Response implements ArrayAccess, JsonSerializable
 {
     /**
-     * The PSR response.
+     * The http-client response instance.
      *
-     * @var \Psr\Http\Message\ResponseInterface
+     * @var \Symfony\Contracts\HttpClient\ResponseInterface
      */
     protected $response;
 
     /**
-     * The body of the response.
-     *
-     * @var string
-     */
-    // public $body;
-
-    /**
      * Create a new response instance.
      *
-     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param \Symfony\Contracts\HttpClient\ResponseInterface $response
      *
-     * @return mixed
+     * @return void
      */
     public function __construct($response)
     {
         $this->response = $response;
-        // $this->body = $this->response->getContent();
     }
 
     /**
@@ -42,7 +34,7 @@ class Response implements ArrayAccess
      *
      * @return $this
      *
-     * @throws \HttpClient\Exceptions\RequestException
+     * @throws \HttpClient\RequestException
      */
     public function throw()
     {
@@ -51,6 +43,49 @@ class Response implements ArrayAccess
         }
 
         return $this;
+    }
+
+    /**
+     * Get body from the response.
+     *
+     * @return array
+     */
+    public function body()
+    {
+        return $this->getContent(false);
+    }
+
+    /**
+     * Get headers from the response.
+     *
+     * @return array
+     */
+    public function headers()
+    {
+        return $this->getHeaders(false);
+    }
+
+    /**
+     * Get the array of the response.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        if (mb_strpos($this->getHeaders(false)['content-type'][0] ?? '', 'xml') !== false) {
+            $previous = libxml_disable_entity_loader(true);
+            $values = json_decode(json_encode(simplexml_load_string($this->__toString(), \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
+            libxml_disable_entity_loader($previous);
+
+            return $values;
+        }
+
+        return $this->response->toArray(false);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     /**
@@ -106,29 +141,6 @@ class Response implements ArrayAccess
         throw new LogicException('Response data may not be mutated using array access.');
     }
 
-    public function headers()
-    {
-        return $this->getHeaders(false);
-    }
-
-    /**
-     * Get the array of the response.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        if (($this->getHeaders()['content-type'][0] ?? null) === 'application/xml') {
-            $previous = libxml_disable_entity_loader(true);
-            $values = json_decode(json_encode(simplexml_load_string($this->__toString(), \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
-            libxml_disable_entity_loader($previous);
-
-            return $values;
-        }
-
-        return $this->response->toArray(false);
-    }
-
     /**
      * Get the body of the response.
      *
@@ -136,7 +148,7 @@ class Response implements ArrayAccess
      */
     public function __toString()
     {
-        return $this->getContent(false);
+        return $this->body();
     }
 
     /**

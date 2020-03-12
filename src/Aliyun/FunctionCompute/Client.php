@@ -26,7 +26,7 @@ class Client extends BaseClient
         $headers = [
             'Date' => $date = gmdate('D, d M Y H:i:s T'),
             'Content-Type' => $contentType = 'application/json',
-            'Content-Length' => '0',
+            // 'Content-Length' => '0',
             // 'Content-MD5' => '',
         ] + $canonicalizedHeaders;
 

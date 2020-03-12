@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\VirtualPrivateCloud;
 
-class Switch extends Client
+class VSwitch extends Client
 {
     public function get($switchId, $region)
     {

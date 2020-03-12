@@ -2,16 +2,26 @@
 
 declare(strict_types=1);
 
-namespace HttpClient\Aliyun\ObjectStorageServiceBucket;
+namespace HttpClient\Aliyun\ObjectStorageService;
 
 use HttpClient\Aliyun\Signature\AuthorizationSignature;
 use HttpClient\Core\Application as BaseApplication;
 
-class Application extends BaseApplication
+class BucketApplication extends BaseApplication
 {
-    protected $providers = [
-        ServiceProvider::class,
-    ];
+    /**
+     * @return void
+     */
+    protected function boot()
+    {
+        $this['client'] = function ($pimple) {
+            return new \HttpClient\Aliyun\ObjectStorageService\Client($pimple);
+        };
+
+        $this['object'] = function ($pimple) {
+            return new BucketObject($pimple);
+        };
+    }
 
     public function info()
     {
@@ -20,12 +30,12 @@ class Application extends BaseApplication
 
     public function create()
     {
-        return $this->request('PUT', '/');
+        return $this['client']->request('PUT', '/');
     }
 
     public function delete()
     {
-        return $this->request('DELETE', '/');
+        return $this['client']->request('DELETE', '/');
     }
 
     protected function signForQueryString($method, $date, $resource)
@@ -37,7 +47,7 @@ class Application extends BaseApplication
     {
         $signature = $this->signForQueryString(
             'GET', $date = time() + 300,
-            sprintf('/%s/%s', $this->getBucketName(), $filename)
+            sprintf('/%s/%s', $this['options']['bucket'], $filename)
         );
 
         $query = http_build_query([
