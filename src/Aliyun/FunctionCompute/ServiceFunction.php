@@ -101,6 +101,6 @@ class ServiceFunction extends Client
      */
     public function invokeAsynchronously($serviceName, $functionName, array $body)
     {
-        return $this->invokeFunction($serviceName, $functionName, $body, true);
+        return $this->invoke($serviceName, $functionName, $body, true);
     }
 }
