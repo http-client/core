@@ -25,7 +25,7 @@ class Client extends BaseClient
 
         $query['Signature'] = RpcSignature::sign($query, $this->app['options']['access_key_secret']);
 
-        return $this->send('POST', '/', compact('query'));
+        return $this->todotodo('POST', '/', compact('query'));
     }
 
     // public function request20180813(array $params)

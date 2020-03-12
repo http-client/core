@@ -25,7 +25,7 @@ class Client extends BaseClient
         //     $method, '', $contentType, $date, ['x-mns-version' => '2015-06-06'], $resource
         // );
 
-        return $this->send($method, $resource, array_merge([
+        return $this->todotodo($method, $resource, array_merge([
             'headers' => $headers,
         ], $options));
     }

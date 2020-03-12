@@ -38,7 +38,7 @@ class Client extends BaseClient
         //     $method, $contentMD5, $contentType, $date, $ch, $resource
         // );
 
-        return $this->send($method, $resource, [
+        return $this->todotodo($method, $resource, [
             'headers' => $headers,
             'body' => empty($json) ? null : json_encode($json),
         ]);

@@ -30,8 +30,8 @@ class ClientFakingTest extends TestCase
     {
         Client::fake();
 
-        $responseA = $this->client->send('GET', 'http://http-client.com/test');
-        $responseB = $this->client->send('GET', 'http://http-client.com/test');
+        $responseA = $this->client->todotodo('GET', 'http://http-client.com/test');
+        $responseB = $this->client->todotodo('GET', 'http://http-client.com/test');
 
         $this->assertInstanceOf(ResponseInterface::class, $responseA);
         $this->assertSame(200, $responseA->getStatusCode());
@@ -47,7 +47,7 @@ class ClientFakingTest extends TestCase
     {
         Client::fake(Client::response('fake', 201, ['X-Foo' => 'bar']));
 
-        $response = $this->client->send('GET', 'http://http-client.com/test');
+        $response = $this->client->todotodo('GET', 'http://http-client.com/test');
 
         $this->assertSame('fake', (string) $response->getBody());
         $this->assertSame(201, $response->getStatusCode());
@@ -60,7 +60,7 @@ class ClientFakingTest extends TestCase
             return Client::response('fake-again', 204, ['X-Foo' => 'baz']);
         });
 
-        $response = $this->client->send('GET', 'http://http-client.com/test');
+        $response = $this->client->todotodo('GET', 'http://http-client.com/test');
 
         $this->assertSame('fake-again', (string) $response->getBody());
         $this->assertSame(204, $response->getStatusCode());
@@ -71,8 +71,8 @@ class ClientFakingTest extends TestCase
     {
         Client::fake();
 
-        $this->client->send('GET', 'http://http-client.com/test-a');
-        $this->client->send('POST', 'http://http-client.com/test-b');
+        $this->client->todotodo('GET', 'http://http-client.com/test-a');
+        $this->client->todotodo('POST', 'http://http-client.com/test-b');
 
         Client::assertSent(0, function ($request) {
             return (string) $request->getUri() === 'http://http-client.com/test-a'
@@ -92,8 +92,8 @@ class ClientFakingTest extends TestCase
             Client::response('request-b'),
         ]);
 
-        $this->client->send('GET', 'http://http-client.com/test-a');
-        $this->client->send('POST', 'http://http-client.com/test-b');
+        $this->client->todotodo('GET', 'http://http-client.com/test-a');
+        $this->client->todotodo('POST', 'http://http-client.com/test-b');
 
         Client::assertSent(0, function ($request, $response) {
             return (string) $request->getUri() === 'http://http-client.com/test-a'

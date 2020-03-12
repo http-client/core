@@ -21,7 +21,7 @@ class Client extends BaseClient
             'OSS %s:%s', $this->app['options']['access_key_id'], AuthorizationSignature::sign($method, '', $contentType, $date, [], ($this instanceof \HttpClient\Aliyun\ObjectStorageService\Client ? '/'.$this->app['options']['bucket'] : '').$resource, $this->app['options']['access_key_secret'])
         );
 
-        return $this->send($method, $resource, array_merge([
+        return $this->todotodo($method, $resource, array_merge([
             'headers' => $headers,
         ], $options));
     }

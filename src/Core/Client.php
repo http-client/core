@@ -41,7 +41,7 @@ class Client
      *
      * @return mixed
      */
-    public function send(string $method, string $uri = '', array $options = [])
+    public function todotodo(string $method, string $uri = '', array $options = [])
     {
         return $this->castResponse(
             $this->getHttpClient()->request($method, $uri, $options)

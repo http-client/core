@@ -2,8 +2,6 @@
 
 require 'vendor/autoload.php';
 
-
-
 \HttpClient\Aliyun\Factory::foo();
 
 // $oss = new HttpClient\Aliyun\ObjectStorageService\Application($options);

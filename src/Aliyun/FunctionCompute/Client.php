@@ -34,7 +34,7 @@ class Client extends BaseClient
 
         $headers['Authorization'] = sprintf('FC %s:%s', $this->app['options']['access_key_id'], $signature);
 
-        return $this->send($method, $resource, array_merge(
+        return $this->todotodo($method, $resource, array_merge(
             ['headers' => $headers], $options
         ));
     }
