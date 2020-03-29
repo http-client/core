@@ -48,4 +48,14 @@ class Role extends Client
             'NewAssumeRolePolicyDocument' => $policy ? json_encode($policy) : null,
         ]);
     }
+
+    public function attach($roleName, $policyType, $policyName)
+    {
+        return $this->request([
+            'Action' => 'AttachPolicyToRole',
+            'RoleName' => $roleName,
+            'PolicyType' => $policyType,
+            'PolicyName' => $policyName,
+        ]);
+    }
 }

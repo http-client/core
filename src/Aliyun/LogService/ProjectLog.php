@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace HttpClient\Aliyun\LogServiceProject;
+namespace HttpClient\Aliyun\LogService;
 
-use HttpClient\Aliyun\LogService\Client;
-
-class Log extends Client
+class ProjectLog extends Client
 {
-    public function getLogs(string $logstoreName, $from, $to, array $params = [])
+    public function get($logstoreName, $from, $to, array $params = [])
     {
         $query = array_merge([
             'type' => 'log',
@@ -16,7 +14,7 @@ class Log extends Client
             'to' => $to,
         ], $params);
 
-        return $this->requestWithAuthorization('GET', "/logstores/{$logstoreName}", $query);
+        return $this->request('GET', "/logstores/{$logstoreName}", compact('query'));
     }
 
     public function putLogs(string $logstoreName, $data)
@@ -32,6 +30,6 @@ class Log extends Client
             // 'x-log-compresstype' => 'deflate',
         ];
         // $data = gzcompress($data);
-        return $this->requestWithAuthorization('POST', "/logstores/{$logstoreName}/shards/lb", [], $mergedHeaders, $data);
+        return $this->request('POST', "/logstores/{$logstoreName}/shards/lb", [], $mergedHeaders, $data);
     }
 }

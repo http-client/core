@@ -20,6 +20,8 @@ class Application extends BaseApplication
      */
     protected function boot()
     {
-        //
+        $this['metric'] = function ($pimple) {
+            return new Metric($pimple);
+        };
     }
 }

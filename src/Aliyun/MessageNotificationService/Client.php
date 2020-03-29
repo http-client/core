@@ -19,6 +19,10 @@ class Client extends BaseClient
             'x-mns-version' => '2015-06-06',
         ];
 
+        if (isset($this->app['options']['security_token'])) {
+            $headers['security-token'] = $this->app['options']['security_token'];
+        }
+
         $headers['Authorization'] = 'MNS '.$this->app['options']['access_key_id'].':'.AuthorizationSignature::sign($method, '', $contentType, $date, ['x-mns-version' => '2015-06-06'], $resource, $this->app['options']['access_key_secret']);
 
         // $headers['Authorization'] = 'MNS '.$this->options['access_key_id'].':'.$this->calculateAuthorizationSignature(

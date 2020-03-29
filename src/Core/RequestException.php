@@ -18,13 +18,14 @@ class RequestException extends Exception
     /**
      * Create a new exception instance.
      *
-     * @param \HttpClient\Core\Response $response
+     * @param \Psr\Http\Message\RequestInterface $request
+     * @param \HttpClient\Core\Response          $response
      *
      * @return void
      */
-    public function __construct(Response $response)
+    public function __construct($request, $response)
     {
-        parent::__construct(sprintf('%s returned status code %d', 'wip', $response->getStatusCode()), $response->getStatusCode());
+        parent::__construct(sprintf('%s returned status code %d', $request->getUri(), $response->getStatusCode()), $response->getStatusCode());
 
         $this->response = $response;
     }

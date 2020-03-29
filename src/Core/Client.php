@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace HttpClient\Core;
 
-use HttpClient\Concerns\ResolvesCache;
-use HttpClient\Concerns\ResolvesLogger;
-use HttpClient\Testing\FakesRequests;
-use HttpClient\Testing\RecordsRequests;
-use Symfony\Component\HttpClient\HttpClient;
+use GuzzleHttp\Client as GuzzleHttp;
+use GuzzleHttp\HandlerStack;
 
 class Client
 {
-    // use FakesRequests, RecordsRequests, ResolvesCache, ResolvesLogger;
-
     /**
-     * The http client instance.
+     * The guzzle http instance.
      *
-     * @var \Symfony\Contracts\HttpClient\HttpClientInterface
+     * @var \GuzzleHttp\ClientInterface
      */
     protected $httpClient;
 
     /**
-     * @var array
+     * The application instance.
+     *
+     * @var \HttpClient\Core\Application
      */
     protected $app;
 
@@ -54,11 +51,7 @@ class Client
     protected function castResponseUsing()
     {
         return function ($response) {
-            $response = new Response($response);
-
-            $response->throw();
-
-            return $response;
+            return new Response($response);
         };
     }
 
@@ -75,11 +68,44 @@ class Client
     /**
      * Resolve a http client.
      *
-     * @return \Symfony\Contracts\HttpClient\HttpClientInterface
+     * @return \GuzzleHttp\ClientInterface
      */
     public function getHttpClient()
     {
-        return $this->httpClient
-            ?: $this->httpClient = HttpClient::create(['base_uri' => $this->app->getBaseUri()]);
+        return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
+            'http_errors' => false,
+            'base_uri' => $this->app->getBaseUri(),
+            'handler' => $this->getHandlerStack(),
+        ]);
+    }
+
+    /**
+     * @return \GuzzleHttp\HandlerStack
+     */
+    protected function getHandlerStack()
+    {
+        $stack = HandlerStack::create();
+
+        $stack->push($this->buildRequestExceptionMiddleware());
+
+        return $stack;
+    }
+
+    /**
+     * @return callable
+     */
+    protected function buildRequestExceptionMiddleware()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                return $handler($request, $options)->then(function ($response) use ($request) {
+                    if ($response->getStatusCode() >= 400) {
+                        throw new RequestException($request, new Response($response));
+                    }
+
+                    return $response;
+                });
+            };
+        };
     }
 }

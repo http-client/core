@@ -10,7 +10,7 @@ use HttpClient\Core\Client as BaseClient;
 
 class Client extends BaseClient
 {
-    public function request($method, $resource, array $json = [])
+    public function request($method, $resource, array $options = [])
     {
         $ch = [
             'x-log-apiversion' => '0.6.0',
@@ -18,30 +18,35 @@ class Client extends BaseClient
             'x-log-bodyrawsize' => '0',
         ];
 
-        $contentType = $contentMD5 = '';
         $headers = [
-            // 'Host' => $this->app['options']['endpoint'],
             'Date' => $date = gmdate('D, d M Y H:i:s T'),
-            // 'Content-Type' => $contentType = empty($json) ? '' : 'application/json',
-            // 'Content-Length' => empty($json) ? '' : strlen(json_encode($json)),
-            // 'Content-MD5' => $contentMD5 = empty($json) ? '' : strtoupper(md5(json_encode($json))),
+            'Content-Type' => $contentType = isset($options['json']) ? 'application/json' : '',
+            'Content-MD5' => $contentMD5 = isset($options['json']) ? strtoupper(md5(json_encode($options['json']))) : '',
         ] + $ch;
 
-        if (!empty($json)) {
-            $headers['Content-Type'] = $contentType = 'application/json';
-            $headers['Content-Length'] = strlen(json_encode($json));
-            $headers['Content-MD5'] = $contentMD5 = strtoupper(md5(json_encode($json)));
+        // add query to url
+        if (isset($options['query'])) {
+            $query = $options['query'];
+            ksort($query);
+            $urlString = '';
+            $first = true;
+            foreach ($query as $key => $value) {
+                if ($first) {
+                    $first = false;
+                    $urlString = "$key=$value";
+                } else {
+                    $urlString .= "&$key=$value";
+                }
+            }
+            $resource .= '?'.$urlString;
         }
-        $headers['Authorization'] = sprintf('LOG %s:%s', $this->app['options']['access_key_id'], AuthorizationSignature::sign($method, $contentMD5, $contentType, $date, $ch, $resource, $this->app['options']['access_key_secret']));
 
-        // $headers['Authorization'] = 'LOG '.$this->app['options']['access_key_id'].':'.$this->calculateAuthorizationSignature(
-        //     $method, $contentMD5, $contentType, $date, $ch, $resource
-        // );
+        $headers['Authorization'] = sprintf('LOG %s:%s', $this->app['options']['access_key_id'], AuthorizationSignature::sign($method, $contentMD5, $contentType, $date, $ch, $resource, $this->app['options']['access_key_secret']));
 
         return $this->todotodo($method, $resource, [
             'headers' => $headers,
-            'body' => empty($json) ? null : json_encode($json),
-        ]);
+            // 'body' => empty($json) ? null : json_encode($json),
+        ] + $options);
     }
 
     // use CalculatesSignatureWithAlgoSha256;

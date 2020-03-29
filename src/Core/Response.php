@@ -13,14 +13,14 @@ class Response implements ArrayAccess, JsonSerializable
     /**
      * The http-client response instance.
      *
-     * @var \Symfony\Contracts\HttpClient\ResponseInterface
+     * @var \Psr\Http\Message\ResponseInterface
      */
     protected $response;
 
     /**
      * Create a new response instance.
      *
-     * @param \Symfony\Contracts\HttpClient\ResponseInterface $response
+     * @param \Psr\Http\Message\ResponseInterface $response
      *
      * @return void
      */
@@ -30,29 +30,13 @@ class Response implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * Throw an exception if a server or client error occurred.
-     *
-     * @return $this
-     *
-     * @throws \HttpClient\RequestException
-     */
-    public function throw()
-    {
-        if ($this->getStatusCode() >= 400) {
-            throw new RequestException($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * Get body from the response.
      *
      * @return array
      */
     public function body()
     {
-        return $this->getContent(false);
+        return (string) $this->response->getBody();
     }
 
     /**
@@ -62,7 +46,7 @@ class Response implements ArrayAccess, JsonSerializable
      */
     public function headers()
     {
-        return $this->getHeaders(false);
+        return $this->getHeaders();
     }
 
     /**
@@ -72,6 +56,18 @@ class Response implements ArrayAccess, JsonSerializable
      */
     public function toArray()
     {
+        $content = $this->body();
+
+        if (preg_match('/\bjson\b/i', $this->getHeaderLine('Content-Type'))) {
+            $content = json_decode($content, true, 512, JSON_BIGINT_AS_STRING);
+
+            return $content;
+        }
+
+        // if (!preg_match('/\bjson\b/i', $this->getHeaderLine('Content-Type'))) {
+        //     throw new JsonException(sprintf('Response content-type is "%s" while a JSON-compatible one was expected for "%s".', $contentType, $this->getInfo('url')));
+        // }
+
         if (mb_strpos($this->getHeaders(false)['content-type'][0] ?? '', 'xml') !== false) {
             $previous = libxml_disable_entity_loader(true);
             $values = json_decode(json_encode(simplexml_load_string($this->__toString(), \SimpleXMLElement::class, LIBXML_NOCDATA)), true);

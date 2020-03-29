@@ -14,8 +14,10 @@ class ProjectLogstore extends Client
     public function create($name, array $params = [])
     {
         return $this->request('POST', '/logstores', [
-            'logstoreName' => $name,
-        ] + $params);
+            'json' => array_merge([
+                'logstoreName' => $name,
+            ], $params),
+        ]);
     }
 
     public function list()

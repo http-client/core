@@ -9,7 +9,7 @@ class Project extends Client
     public function create($projectName)
     {
         return $this->request('POST', '/', [
-            'projectName' => $projectName,
+            'json' => ['projectName' => $projectName],
         ]);
     }
 

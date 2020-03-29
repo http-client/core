@@ -24,6 +24,10 @@ class ProjectApplication extends BaseApplication
         $this['logstore'] = function ($pimple) {
             return new ProjectLogstore($pimple);
         };
+
+        $this['index'] = function ($pimple) {
+            return new ProjectLogstoreIndex($pimple);
+        };
     }
 
     public function info()

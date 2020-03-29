@@ -67,7 +67,7 @@ class ServiceFunction extends Client
      *
      * @return mixed
      */
-    public function deleteFunction($serviceName, $functionName)
+    public function delete($serviceName, $functionName)
     {
         return $this->request('DELETE', "/{$this->apiVersion}/services/{$serviceName}/functions/{$functionName}");
     }

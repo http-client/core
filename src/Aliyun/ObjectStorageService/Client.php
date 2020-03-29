@@ -6,6 +6,7 @@ namespace HttpClient\Aliyun\ObjectStorageService;
 
 use HttpClient\Aliyun\Signature\AuthorizationSignature;
 use HttpClient\Core\Client as BaseClient;
+use HttpClient\Support\Arr;
 
 class Client extends BaseClient
 {
@@ -17,12 +18,16 @@ class Client extends BaseClient
             // 'Content-Length' => '0',
         ];
 
+        $ch = array_filter(Arr::startsWith($options['headers'] ?? [], 'x-oss-'));
+
+        $headers = array_merge($headers, $ch);
+
         $headers['Authorization'] = sprintf(
-            'OSS %s:%s', $this->app['options']['access_key_id'], AuthorizationSignature::sign($method, '', $contentType, $date, [], ($this instanceof \HttpClient\Aliyun\ObjectStorageService\Client ? '/'.$this->app['options']['bucket'] : '').$resource, $this->app['options']['access_key_secret'])
+            'OSS %s:%s', $this->app['options']['access_key_id'], AuthorizationSignature::sign($method, '', $contentType, $date, $ch, (isset($this->app['options']['bucket']) ? '/'.$this->app['options']['bucket'] : '').$resource, $this->app['options']['access_key_secret'])
         );
 
-        return $this->todotodo($method, $resource, array_merge([
+        return $this->todotodo($method, $resource, [
             'headers' => $headers,
-        ], $options));
+        ]);
     }
 }

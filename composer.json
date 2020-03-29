@@ -1,6 +1,6 @@
 {
     "name": "http-client/http-client",
-    "description": "Http Clinet for API requests.",
+    "description": "Http Client for API requests.",
     "keywords": [
         "wechat",
         "aliyun",
@@ -16,8 +16,8 @@
     ],
     "require": {
         "php": "^7.2",
-        "pimple/pimple": "^3.3",
-        "symfony/http-client": "^5.0"
+        "guzzlehttp/guzzle": "^6.5",
+        "pimple/pimple": "^3.3"
     },
     "require-dev": {
         "mockery/mockery": "^1.3",

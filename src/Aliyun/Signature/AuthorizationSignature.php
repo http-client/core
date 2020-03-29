@@ -21,9 +21,9 @@ class AuthorizationSignature
         }
 
         $string = implode("\n", [
-            strtoupper($method), $contentMd5, $contentType, $date, $canonicalizedHeadersString,
-        ]).$canonicalizedResource;
-        // dd($this->options['access_key_secret']);
+            strtoupper($method), $contentMd5, $contentType, $date, $canonicalizedHeadersString.$canonicalizedResource,
+        ]); // ."\n";
+        // dump($string);
         return base64_encode(
             hash_hmac($algo, $string, $accessKeySecret, true)
         );
