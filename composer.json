@@ -8,6 +8,7 @@
         "api"
     ],
     "homepage": "https://http-client.com",
+    "license": "MIT",
     "authors": [
         {
             "name": "mingyoung",
