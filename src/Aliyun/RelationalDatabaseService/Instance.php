@@ -22,4 +22,19 @@ class Instance extends Client
             'RegionId' => $region,
         ]);
     }
+
+    public function create(array $params)
+    {
+        return $this->request([
+            'Action' => 'CreateDBInstance',
+        ] + $params);
+    }
+
+    public function delete($instanceId)
+    {
+        return $this->request([
+            'Action' => 'DeleteDBInstance',
+            'DBInstanceId' => $instanceId,
+        ]);
+    }
 }

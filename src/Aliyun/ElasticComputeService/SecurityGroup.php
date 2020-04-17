@@ -19,4 +19,13 @@ class SecurityGroup extends Client
             'Action' => 'AuthorizeSecurityGroup',
         ] + $params);
     }
+
+    public function delete($securityGroupId, $region)
+    {
+        return $this->request([
+            'Action' => 'DeleteSecurityGroup',
+            'SecurityGroupId' => $securityGroupId,
+            'RegionId' => $region,
+        ]);
+    }
 }

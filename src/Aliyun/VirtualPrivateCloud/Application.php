@@ -27,6 +27,10 @@ class Application extends BaseApplication
         $this['switch'] = function ($pimple) {
             return new VSwitch($pimple);
         };
+
+        $this['zone'] = function ($app) {
+            return new Zone($app);
+        };
     }
 
     public function get($vpcId, $regionId, array $params = [])
@@ -49,5 +53,14 @@ class Application extends BaseApplication
     public function create(array $params)
     {
         return $this['client']->request(array_merge(['Action' => 'CreateVpc'], $params));
+    }
+
+    public function delete($vpcId, $regionId)
+    {
+        return $this['client']->request([
+            'Action' => 'DeleteVpc',
+            'VpcId' => $vpcId,
+            'RegionId' => $regionId,
+        ]);
     }
 }

@@ -32,9 +32,9 @@ class BucketApplication extends BaseApplication
     public function create($acl = null)
     {
         return $this['client']->request('PUT', '/', [
-            'headers' => [
+            'headers' => array_filter([
                 'x-oss-acl' => $acl,
-            ],
+            ]),
         ]);
     }
 

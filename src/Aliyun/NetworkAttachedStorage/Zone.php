@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace HttpClient\Aliyun\NetworkAttachedStorage;
 
-class Region extends Client
+class Zone extends Client
 {
-    public function list()
+    public function list($region)
     {
         return $this->request([
-            'Action' => 'DescribeRegions',
+            'Action' => 'DescribeZones',
+            'RegionId' => $region,
         ]);
     }
 }

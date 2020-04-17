@@ -15,7 +15,7 @@ class Filesystem extends Client
 
     public function get($fileSystemId, array $params = [])
     {
-        return $this->describeFileSystems(array_merge([
+        return $this->list(array_merge([
             'FileSystemId' => $fileSystemId,
         ], $params));
     }

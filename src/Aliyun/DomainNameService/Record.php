@@ -6,6 +6,14 @@ namespace HttpClient\Aliyun\DomainNameService;
 
 class Record extends Client
 {
+    public function list($domainName, array $params = [])
+    {
+        return $this->request([
+            'Action' => 'DescribeDomainRecords',
+            'DomainName' => $domainName,
+        ] + $params);
+    }
+
     /**
      * @param string $type
      * @param string $domainName

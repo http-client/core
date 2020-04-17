@@ -17,6 +17,10 @@ class Application extends BaseApplication
             return new Region($pimple);
         };
 
+        $this['zone'] = function ($pimple) {
+            return new Zone($pimple);
+        };
+
         $this['filesystem'] = function ($pimple) {
             return new Filesystem($pimple);
         };

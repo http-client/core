@@ -64,19 +64,13 @@ class Response implements ArrayAccess, JsonSerializable
             return $content;
         }
 
-        // if (!preg_match('/\bjson\b/i', $this->getHeaderLine('Content-Type'))) {
-        //     throw new JsonException(sprintf('Response content-type is "%s" while a JSON-compatible one was expected for "%s".', $contentType, $this->getInfo('url')));
-        // }
-
-        if (mb_strpos($this->getHeaders(false)['content-type'][0] ?? '', 'xml') !== false) {
+        if (preg_match('/\bxml\b/i', $this->getHeaderLine('Content-Type'))) {
             $previous = libxml_disable_entity_loader(true);
-            $values = json_decode(json_encode(simplexml_load_string($this->__toString(), \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
+            $values = json_decode(json_encode(simplexml_load_string($content, \SimpleXMLElement::class, LIBXML_NOCDATA)), true);
             libxml_disable_entity_loader($previous);
 
             return $values;
         }
-
-        return $this->response->toArray(false);
     }
 
     public function jsonSerialize()

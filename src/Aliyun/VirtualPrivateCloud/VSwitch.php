@@ -6,6 +6,14 @@ namespace HttpClient\Aliyun\VirtualPrivateCloud;
 
 class VSwitch extends Client
 {
+    public function list($region, array $params = [])
+    {
+        return $this->request([
+            'Action' => 'DescribeVSwitches',
+            'RegionId' => $region,
+        ] + $params);
+    }
+
     public function get($switchId, $region)
     {
         return $this->request([
@@ -20,5 +28,14 @@ class VSwitch extends Client
         return $this->request(array_merge([
             'Action' => 'CreateVSwitch',
         ], $params));
+    }
+
+    public function delete($switchId, $region)
+    {
+        return $this->request([
+            'Action' => 'DeleteVSwitch',
+            'RegionId' => $region,
+            'VSwitchId' => $switchId,
+        ]);
     }
 }
