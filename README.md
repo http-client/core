@@ -170,7 +170,7 @@ $response = $server->resolve();
 /**
  * 输出响应内容
  */
-$response->todotodo();
+$response->makeRequest();
 
 /**
  * Laravel 等框架可以直接返回

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace HttpClient\Aliyun\Tests\ObjectStorageService;
 
 use HttpClient\Aliyun\ObjectStorageService\Application;
-use HttpClient\Core\RequestException;
+use HttpClient\RequestException;
 use PHPUnit\Framework\TestCase;
 
 class Test extends TestCase
