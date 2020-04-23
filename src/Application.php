@@ -3,19 +3,20 @@
 namespace HttpClient;
 
 use HttpClient\Config\Repository;
+use HttpClient\Contracts\Application as ApplicationContract;
 use HttpClient\Plugin\PluginManager;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use League\Event\Emitter;
 
 /**
- * @property-read \HttpClient\Application $app
+ * @property-read HttpClient\Contracts\Application $app
  * @property-read \HttpClient\Config\Repository $config
  * @property-read \HttpClient\Client $client
  * @property-read \League\Event\Emitter $events
  * @property-read \HttpClient\Plugin\PluginManager $plugins
  */
-class Application
+class Application implements ApplicationContract
 {
     /**
      * The container instance.
@@ -52,7 +53,9 @@ class Application
             return new Repository($config);
         });
 
-        $this->container->share(static::class);
+        $this->container->share(ApplicationContract::class, function () {
+            return $this;
+        });
         $this->container->share(Emitter::class);
         $this->container->share(PluginManager::class);
         $this->container->share(Client::class);
@@ -69,7 +72,7 @@ class Application
 
         $this->boot();
 
-        array_map([$this, '__get'], $this->plugins->extensions());
+        array_map('call_user_func', array_map([$this, '__get'], $this->plugins->extensions()));
     }
 
     /**
@@ -80,7 +83,7 @@ class Application
     public function definitions()
     {
         return array_merge([
-            'app' => static::class,
+            'app' => ApplicationContract::class,
             'events' => Emitter::class,
             'plugins' => PluginManager::class,
             'config' => Repository::class,
