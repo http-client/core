@@ -8,7 +8,6 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
-        'declare_strict_types' => true,
         'phpdoc_summary' => false,
         'single_trait_insert_per_statement' => false,
         'ordered_imports' => true,

@@ -1,27 +1,25 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace HttpClient;
 
+use HttpClient\Config\Repository;
 use HttpClient\Plugin\PluginManager;
 use League\Container\Container;
+use League\Container\ReflectionContainer;
 use League\Event\Emitter;
 
 class Application
 {
     protected $container;
 
-    protected $providers = [];
-
     /**
-     * The client instances.
+     * The definitions in the container.
      *
      * @var array
      */
-    protected $clients = [
-        //
-    ];
+    protected $definitions = [];
 
     /**
      * The event listener mappings for the application.
@@ -35,24 +33,22 @@ class Application
      */
     public function __construct(array $config = [])
     {
-        $this->container = new Container;
-        $this->container->share('config', $config);
-        $this->container->share(static::class, $this);
-        $this->container->share('events', new Emitter);
-        $this->container->share('plugins', new PluginManager);
+        $this->container = (new Container)
+                                ->delegate((new ReflectionContainer)->cacheResolutions());
 
-        foreach ($this->clients as $key => $client) {
-            $this->container->share($key, $client)->addArgument(static::class);
-        }
+        $this->container->share(Repository::class, function () use ($config) {
+            return new Repository($config);
+        });
+
+        $this->container->share(static::class);
+        $this->container->share(Emitter::class);
+        $this->container->share(PluginManager::class);
+        $this->container->share(Client::class);
 
         if (isset($this->config['http']['base_uri'])) {
-            $this->on(Events\ClientResolved::class, function ($event) {
-                $event->client->setBaseUri($this->config['http']['base_uri']);
-            });
+            $this->client->setBaseUri($this->config['http']['base_uri']);
         }
 
-        $this->boot();
-        $this->registerServiceProviders();
 
         foreach ($this->listen as $event => $listener) {
             $this->on($event, function ($event) use ($listener) {
@@ -60,27 +56,27 @@ class Application
             });
         }
 
-        foreach ($this->plugins->provides() as $name => $provide) {
-            $this->container->share($name, $provide)->addArgument(static::class);
-        }
-        $this->bootExtensions();
+        // foreach ($this->plugins->provides() as $name => $provide) {
+        //     $this->container->share($name, $provide)->addArgument(static::class);
+        // }
+        // $this->bootExtensions();
+        $this->boot();
+    }
+
+    public function aliases()
+    {
+        return array_merge([
+            'app' => static::class,
+            'events' => Emitter::class,
+            'plugins' => PluginManager::class,
+            'config' => Repository::class,
+            'client' => Client::class,
+        ], $this->definitions);
     }
 
     public function on($event, $listener)
     {
         $this->events->addListener($event, $listener);
-    }
-
-    public function addServiceProvider($provider)
-    {
-        $this->container->addServiceProvider($provider);
-    }
-
-    protected function registerServiceProviders()
-    {
-        foreach ($this->providers as $provider) {
-            $this->addServiceProvider($provider);
-        }
     }
 
     protected function bootExtensions()
@@ -100,6 +96,14 @@ class Application
 
     public function __get($key)
     {
+        if (isset($this->aliases()[$key])) {
+            return $this->container->get($this->aliases()[$key]);
+        }
+
+        if (! $this->container->has($key)) {
+            throw new DefinitionNotFoundException("Definition [{$key}] is not being managed by the container");
+        }
+
         return $this->container->get($key);
     }
 }

@@ -17,19 +17,21 @@
     ],
     "require": {
         "php": "^7.2",
-        "http-client/plugin": "*",
         "guzzlehttp/guzzle": "^6.5",
+        "http-client/plugin": "^1.0",
         "league/container": "^3.3",
         "league/event": "^2.2"
     },
     "require-dev": {
-        "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "psr-4": {
             "HttpClient\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace HttpClient;
 
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
+use GuzzleHttp\Middleware as GuzzleMiddleware;
 
 class Client
 {
@@ -24,9 +24,13 @@ class Client
      */
     protected $httpClient;
 
+    protected $resolvedCallbacks = [];
+
     protected $transferStats;
 
     protected $castResponseUsing;
+
+    protected $withExceptionHandling = true;
 
     /**
      * The application instance.
@@ -35,20 +39,21 @@ class Client
      */
     protected $app;
 
-    protected $middleware = [];
+    public $middleware;
 
     /**
      * HttpClient constructor.
      *
      * @param \HttpClient\Core\Application $app
      */
-    public function __construct(Application $app)
+    public function __construct()
     {
-        $this->app = $app;
+        $this->middleware = new Middleware;
+    }
 
-        $this->push($this->buildRequestExceptionMiddleware(), 'request.exception');
-
-        $this->app->events->emit(new Events\ClientResolved($this));
+    public function getBaseUri()
+    {
+        return $this->baseUri;
     }
 
     public function setBaseUri($uri)
@@ -58,16 +63,38 @@ class Client
         return $this;
     }
 
+    public function fake($response = null)
+    {
+        $recorder = new Testing\Recorder;
+
+        $this->middleware->add('fake.recorder', $recorder->handler());
+        $this->middleware->add('fake.response', function () use ($response) {
+            return function () use ($response) {
+                if (is_callable($response)) {
+                    return Testing\Response::create($response->__invoke());
+                }
+
+                if ($response instanceof \GuzzleHttp\Promise\PromiseInterface) {
+                    return $response;
+                }
+
+                return Testing\Response::create();
+            };
+        });
+
+        return $recorder;
+    }
+
     /**
      * Make an http request.
      *
      * @return mixed
      */
-    public function makeRequest(string $method, string $uri = '', array $options = [])
+    public function request(string $method, string $uri = '', array $options = [])
     {
-        $response = $this->getHttpClient()->request($method, $uri, $options);
-
-        return $this->castResponse($response);
+        return $this->castResponse(
+            $this->getHttpClient()->request($method, $uri, $options)
+        );
     }
 
     /**
@@ -93,6 +120,13 @@ class Client
         }, $response);
     }
 
+    public function withoutExceptionHandling()
+    {
+        $this->withExceptionHandling = false;
+
+        return $this;
+    }
+
     /**
      * Resolve a http client.
      *
@@ -100,6 +134,10 @@ class Client
      */
     public function getHttpClient()
     {
+        foreach ($this->resolvedCallbacks as $callback) {
+            call_user_func($callback, $this);
+        }
+
         return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
             'http_errors' => false,
             'base_uri' => $this->baseUri,
@@ -110,9 +148,9 @@ class Client
         ]);
     }
 
-    public function push($middleware, $name = null)
+    public function resolved(callable $callback)
     {
-        $this->middleware[$name ?: spl_object_hash($middleware)] = $middleware;
+        $this->resolvedCallbacks[] = $callback;
 
         return $this;
     }
@@ -123,44 +161,21 @@ class Client
     protected function getHandlerStack()
     {
         $stack = HandlerStack::create();
-        // dd($this->middleware);
-        foreach ($this->middleware as $name => $middleware) {
+
+        if ($this->withExceptionHandling) {
+            $stack->push(GuzzleMiddleware::mapResponse(function ($response) {
+                if ($response->getStatusCode() >= 400) {
+                    throw new RequestException((new Response($response))->setTransferStats($this->transferStats));
+                }
+
+                return $response;
+            }));
+        }
+
+        foreach ($this->middleware->all() as $name => $middleware) {
             $stack->push($middleware, $name);
         }
 
         return $stack;
-    }
-
-    /**
-     * @return callable
-     */
-    protected function buildRequestExceptionMiddleware()
-    {
-        return Middleware::mapResponse(function ($response) {
-            if ($response->getStatusCode() >= 400) {
-                throw new RequestException((new Response($response))->setTransferStats($this->transferStats));
-                // throw new RequestException(
-                //     new Response($response), $this->transferStats
-                // );
-            }
-
-            return $response;
-        });
-        // return function ($handler) {
-        //     return function ($request, $options) use ($handler) {
-        //         return $handler($request, $options)->then(function ($response) use ($request) {
-        //             if ($response->getStatusCode() >= 400) {
-        //                 throw new RequestException($request, new Response($response));
-        //             }
-
-        //             return $response;
-        //         });
-        //     };
-        // };
-    }
-
-    protected function build()
-    {
-        //
     }
 }
