@@ -26,6 +26,19 @@ class Application implements ApplicationContract
     protected $container;
 
     /**
+     * The package definitions in the container.
+     *
+     * @var array
+     */
+    protected $packageDefinitions = [
+        'app' => ApplicationContract::class,
+        'events' => Emitter::class,
+        'plugins' => PluginManager::class,
+        'config' => Repository::class,
+        'client' => Client::class,
+    ];
+
+    /**
      * The definitions in the container.
      *
      * @var array
@@ -72,6 +85,7 @@ class Application implements ApplicationContract
 
         $this->boot();
 
+        $this->packageDefinitions = array_merge($this->plugins->definitions(), $this->packageDefinitions);
         array_map('call_user_func', array_map([$this, '__get'], $this->plugins->extensions()));
     }
 
@@ -82,13 +96,7 @@ class Application implements ApplicationContract
      */
     public function definitions()
     {
-        return array_merge([
-            'app' => ApplicationContract::class,
-            'events' => Emitter::class,
-            'plugins' => PluginManager::class,
-            'config' => Repository::class,
-            'client' => Client::class,
-        ], $this->definitions);
+        return array_merge($this->packageDefinitions, $this->definitions);
     }
 
     /**
