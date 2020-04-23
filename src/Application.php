@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace HttpClient;
 
 use HttpClient\Config\Repository;
@@ -10,8 +8,20 @@ use League\Container\Container;
 use League\Container\ReflectionContainer;
 use League\Event\Emitter;
 
+/**
+ * @property-read \HttpClient\Application $app
+ * @property-read \HttpClient\Config\Repository $config
+ * @property-read \HttpClient\Client $client
+ * @property-read \League\Event\Emitter $events
+ * @property-read \HttpClient\Plugin\PluginManager $plugins
+ */
 class Application
 {
+    /**
+     * The container instance.
+     *
+     * @var \League\Container\Container
+     */
     protected $container;
 
     /**
@@ -29,7 +39,9 @@ class Application
     protected $listen = [];
 
     /**
-     * Create a new http-client instance.
+     * Create a new Application instance.
+     *
+     * @param array $config
      */
     public function __construct(array $config = [])
     {
@@ -49,21 +61,23 @@ class Application
             $this->client->setBaseUri($this->config['http']['base_uri']);
         }
 
-
         foreach ($this->listen as $event => $listener) {
             $this->on($event, function ($event) use ($listener) {
                 call_user_func(new $listener($this), $event);
             });
         }
 
-        // foreach ($this->plugins->provides() as $name => $provide) {
-        //     $this->container->share($name, $provide)->addArgument(static::class);
-        // }
-        // $this->bootExtensions();
         $this->boot();
+
+        array_map([$this, '__get'], $this->plugins->extensions());
     }
 
-    public function aliases()
+    /**
+     * The definitions in the container.
+     *
+     * @return array
+     */
+    public function definitions()
     {
         return array_merge([
             'app' => static::class,
@@ -74,16 +88,15 @@ class Application
         ], $this->definitions);
     }
 
+    /**
+     * @param $event
+     * @param $listener
+     *
+     * @return void
+     */
     public function on($event, $listener)
     {
         $this->events->addListener($event, $listener);
-    }
-
-    protected function bootExtensions()
-    {
-        foreach ($this->plugins->extensions() as $extension) {
-            call_user_func(new $extension, $this);
-        }
     }
 
     /**
@@ -94,14 +107,15 @@ class Application
         //
     }
 
+    /**
+     * @param $key
+     *
+     * @return mixed
+     */
     public function __get($key)
     {
-        if (isset($this->aliases()[$key])) {
-            return $this->container->get($this->aliases()[$key]);
-        }
-
-        if (! $this->container->has($key)) {
-            throw new DefinitionNotFoundException("Definition [{$key}] is not being managed by the container");
+        if (isset($this->definitions()[$key])) {
+            $key = $this->definitions()[$key];
         }
 
         return $this->container->get($key);

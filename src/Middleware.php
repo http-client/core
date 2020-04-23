@@ -1,12 +1,20 @@
 <?php
+
 namespace HttpClient;
 
-use Countable;
-
-class Middleware implements Countable
+class Middleware
 {
+    /**
+     * @var array
+     */
     protected $middleware = [];
 
+    /**
+     * @param $name
+     * @param $middleware
+     *
+     * @return $this
+     */
     public function add($name, $middleware)
     {
         $this->middleware[$name] = $middleware;
@@ -14,6 +22,11 @@ class Middleware implements Countable
         return $this;
     }
 
+    /**
+     * @param $name
+     *
+     * @return $this
+     */
     public function remove($name)
     {
         unset($this->middleware[$name]);
@@ -21,13 +34,11 @@ class Middleware implements Countable
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function all()
     {
         return $this->middleware;
-    }
-
-    public function count()
-    {
-        return count($this->middleware);
     }
 }

@@ -5,7 +5,7 @@ namespace HttpClient\Tests;
 use HttpClient\Application;
 use HttpClient\Client;
 use HttpClient\Config\Repository;
-use HttpClient\DefinitionNotFoundException;
+use League\Container\Exception\NotFoundException;
 use League\Event\Emitter;
 use PHPUnit\Framework\TestCase;
 
@@ -26,8 +26,7 @@ class ApplicationTest extends TestCase
     {
         $app = new Application;
 
-        $this->expectException(DefinitionNotFoundException::class);
-        $this->expectExceptionMessage('Definition [doesnexists] is not being managed by the container');
+        $this->expectException(NotFoundException::class);
         $app->doesnexists;
     }
 }

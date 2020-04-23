@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace HttpClient;
 
 use GuzzleHttp\Client as GuzzleHttp;
@@ -10,6 +8,11 @@ use GuzzleHttp\Middleware as GuzzleMiddleware;
 
 class Client
 {
+    /**
+     * @var \HttpClient\Middleware
+     */
+    public $middleware;
+
     /**
      * Base URI of the http client.
      *
@@ -24,38 +27,59 @@ class Client
      */
     protected $httpClient;
 
+    /**
+     * The array of resolved callbacks.
+     *
+     * @var array
+     */
     protected $resolvedCallbacks = [];
 
+    /**
+     * The transferStats instance.
+     *
+     * @var \GuzzleHttp\TransferStats
+     */
     protected $transferStats;
 
+    /**
+     * The response caster.
+     *
+     * @var callable
+     */
     protected $castResponseUsing;
 
+    /**
+     * @var bool
+     */
     protected $withExceptionHandling = true;
 
     /**
-     * The application instance.
+     * Create a new HttpClient instance.
      *
-     * @var \HttpClient\Core\Application
-     */
-    protected $app;
-
-    public $middleware;
-
-    /**
-     * HttpClient constructor.
-     *
-     * @param \HttpClient\Core\Application $app
+     * @return void
      */
     public function __construct()
     {
         $this->middleware = new Middleware;
     }
 
+    /**
+     * The base uri.
+     *
+     * @return string
+     */
     public function getBaseUri()
     {
         return $this->baseUri;
     }
 
+    /**
+     * Set the base uri.
+     *
+     * @param string $uri
+     *
+     * @return $this
+     */
     public function setBaseUri($uri)
     {
         $this->baseUri = $uri;
@@ -88,6 +112,10 @@ class Client
     /**
      * Make an http request.
      *
+     * @param string $method
+     * @param string $uri
+     * @param array $options
+     *
      * @return mixed
      */
     public function request(string $method, string $uri = '', array $options = [])
@@ -98,6 +126,8 @@ class Client
     }
 
     /**
+     * @param callable $callback
+     *
      * @return $this
      */
     public function castResponseUsing(callable $callback)
@@ -120,6 +150,9 @@ class Client
         }, $response);
     }
 
+    /**
+     * @return $this
+     */
     public function withoutExceptionHandling()
     {
         $this->withExceptionHandling = false;
@@ -148,6 +181,13 @@ class Client
         ]);
     }
 
+    /**
+     * Register a resolved callback with the application.
+     *
+     * @param callable $callback
+     *
+     * @return $this
+     */
     public function resolved(callable $callback)
     {
         $this->resolvedCallbacks[] = $callback;

@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace HttpClient;
 
 use ArrayAccess;
@@ -17,6 +15,9 @@ class Response implements ArrayAccess, JsonSerializable
      */
     protected $response;
 
+    /**
+     * @var \GuzzleHttp\TransferStats
+     */
     public $transferStats;
 
     /**
@@ -33,6 +34,8 @@ class Response implements ArrayAccess, JsonSerializable
 
     /**
      * @param \GuzzleHttp\TransferStats $transferStats
+     *
+     * @return $this
      */
     public function setTransferStats($transferStats)
     {
@@ -44,7 +47,7 @@ class Response implements ArrayAccess, JsonSerializable
     /**
      * Get body from the response.
      *
-     * @return array
+     * @return string
      */
     public function body()
     {
@@ -85,6 +88,9 @@ class Response implements ArrayAccess, JsonSerializable
         }
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return $this->toArray();
