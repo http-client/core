@@ -22,6 +22,11 @@
         "league/container": "^3.3",
         "league/event": "^2.2"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^8.5"
     },
