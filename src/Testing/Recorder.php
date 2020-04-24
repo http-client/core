@@ -29,6 +29,8 @@ class Recorder
         Assert::assertTrue(
             count($this->recorded($callback)) > 0, 'An expected request was not recorded.'
         );
+
+        return $this;
     }
 
     /**
@@ -40,6 +42,8 @@ class Recorder
     public function assertSentCount($count)
     {
         Assert::assertCount($count, $this->recorded);
+
+        return $this;
     }
 
     public function recorded($callback)
