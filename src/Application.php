@@ -10,11 +10,11 @@ use League\Container\ReflectionContainer;
 use League\Event\Emitter;
 
 /**
- * @property-read HttpClient\Contracts\Application $app
- * @property-read \HttpClient\Config\Repository $config
- * @property-read \HttpClient\Client $client
- * @property-read \League\Event\Emitter $events
- * @property-read \HttpClient\Plugin\PluginManager $plugins
+ * @property HttpClient\Contracts\Application $app
+ * @property \HttpClient\Config\Repository    $config
+ * @property \HttpClient\Client               $client
+ * @property \League\Event\Emitter            $events
+ * @property \HttpClient\Plugin\PluginManager $plugins
  */
 class Application implements ApplicationContract
 {
@@ -54,8 +54,6 @@ class Application implements ApplicationContract
 
     /**
      * Create a new Application instance.
-     *
-     * @param array $config
      */
     public function __construct(array $config = [])
     {
@@ -130,5 +128,10 @@ class Application implements ApplicationContract
         }
 
         return $this->container->get($key);
+    }
+
+    public function __set($key, $value)
+    {
+        //
     }
 }

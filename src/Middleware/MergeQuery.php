@@ -1,20 +1,48 @@
 <?php
 
-
-
 namespace HttpClient\Middleware;
 
+use Closure;
 use Psr\Http\Message\RequestInterface;
 
 class MergeQuery
 {
+    /**
+     * The query callable.
+     *
+     * @var callable
+     */
     protected $query;
-    protected $condition;
 
-    public function __construct($query, $condition = null)
+    /**
+     * @var callable|null
+     */
+    protected $ignoreWhen;
+
+    /**
+     * Create a new instance.
+     *
+     * @param callable|array $query
+     *
+     * @return void
+     */
+    public function __construct($query)
     {
-        $this->query = $query;
-        $this->condition = $condition;
+        $this->query = is_callable($query) ? $query : function () use ($query) {
+            return $query;
+        };
+    }
+
+    /**
+     * Determine whether should ignore the current middleware.
+     *
+     * @return $this
+     */
+    public function ignoreWhen(Closure $callback)
+    {
+        $this->ignoreWhen = $callback;
+
+        return $this;
     }
 
     /**
@@ -23,43 +51,16 @@ class MergeQuery
     public function __invoke(callable $next)
     {
         return function (RequestInterface $request, array $options) use ($next) {
-            if ($this->shouldSkip($request, $options)) {
+            if ($this->ignoreWhen instanceof Closure && $this->ignoreWhen->__invoke($request, $options)) {
                 return $next($request, $options);
             }
 
             parse_str($request->getUri()->getQuery(), $query);
-            $query = http_build_query(array_merge($this->getQuery(), $query));
+            $query = http_build_query(array_merge(call_user_func($this->query), $query));
 
             $request = $request->withUri($request->getUri()->withQuery($query));
 
             return $next($request, $options);
         };
-    }
-
-    /**
-     * Skips the current middleware.
-     *
-     * @param \Psr\Http\Message\RequestInterface $request
-     * @param array                              $options
-     */
-    protected function shouldSkip($request, $options): bool
-    {
-        if ($this->condition) {
-            return call_user_func_array($this->condition, [$request, $options]);
-        }
-
-        return false;
-    }
-
-    /**
-     * Merges query to the request.
-     */
-    protected function getQuery(): array
-    {
-        if (is_array($this->query)) {
-            return $this->query;
-        }
-
-        return call_user_func($this->query);
     }
 }

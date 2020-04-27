@@ -112,10 +112,6 @@ class Client
     /**
      * Make an http request.
      *
-     * @param string $method
-     * @param string $uri
-     * @param array $options
-     *
      * @return mixed
      */
     public function request(string $method, string $uri = '', array $options = [])
@@ -126,8 +122,6 @@ class Client
     }
 
     /**
-     * @param callable $callback
-     *
      * @return $this
      */
     public function castResponseUsing(callable $callback)
@@ -183,8 +177,6 @@ class Client
 
     /**
      * Register a resolved callback with the application.
-     *
-     * @param callable $callback
      *
      * @return $this
      */

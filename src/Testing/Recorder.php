@@ -37,6 +37,7 @@ class Recorder
      * Assert how many requests have been recorded.
      *
      * @param $count
+     *
      * @return void
      */
     public function assertSentCount($count)

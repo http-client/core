@@ -2,7 +2,8 @@
 
 namespace HttpClient;
 
-function str_random($length = 16) {
+function str_random($length = 16)
+{
     $value = '';
     $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
 

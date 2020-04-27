@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace HttpClient\Testing;
 
 class ResponseSequence

@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace HttpClient\Support;
 
 use Closure;

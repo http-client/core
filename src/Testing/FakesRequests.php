@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace HttpClient\Testing;
 
 use function GuzzleHttp\Promise\promise_for;
