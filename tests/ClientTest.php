@@ -6,7 +6,6 @@ use HttpClient\Client;
 use HttpClient\Factory;
 use HttpClient\RequestException;
 use HttpClient\Response;
-use HttpClient\Testing\Recorder;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -76,15 +75,24 @@ class ClientTest extends TestCase
     public function testFake()
     {
         $client = new Client;
-        $fake = $client->fake();
-
+        $client->fake();
         $client->request('GET', '/foo');
 
-        $this->assertInstanceOf(Recorder::class, $fake);
-        $fake->assertSentCount(1);
-        $fake->assertSent(function ($request) {
+        $client->assertSentCount(1);
+        $client->assertSent(function ($request) {
             return $request->getUri()->getPath() === '/foo'
                 && $request->getMethod() === 'GET';
         });
+    }
+
+    public function testFakeUrls()
+    {
+        $clientA = (new Client)->fake([
+            'http-client.com' => \HttpClient\Testing\Response::create('test'),
+            '*' => \HttpClient\Testing\Response::create('fallback'),
+        ]);
+
+        $this->assertSame('test', $clientA->request('POST', 'http://http-client.com/foo')->body());
+        $this->assertSame('fallback', $clientA->request('POST', 'http://example.com/foo')->body());
     }
 }

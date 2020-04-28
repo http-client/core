@@ -5,13 +5,18 @@ namespace HttpClient;
 use GuzzleHttp\Client as GuzzleHttp;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware as GuzzleMiddleware;
+use HttpClient\Testing\FakesRequests;
 
 class Client
 {
+    use FakesRequests;
+
     /**
      * @var \HttpClient\Middleware
      */
-    public $middleware;
+    // public $middleware;
+
+    public $handlerStack;
 
     /**
      * Base URI of the http client.
@@ -60,7 +65,8 @@ class Client
      */
     public function __construct()
     {
-        $this->middleware = new Middleware;
+        $this->handlerStack = HandlerStack::create();
+        // $this->middleware = new Middleware;
     }
 
     /**
@@ -85,28 +91,6 @@ class Client
         $this->baseUri = $uri;
 
         return $this;
-    }
-
-    public function fake($response = null)
-    {
-        $recorder = new Testing\Recorder;
-
-        $this->middleware->add('fake.recorder', $recorder->handler());
-        $this->middleware->add('fake.response', function () use ($response) {
-            return function () use ($response) {
-                if (is_callable($response)) {
-                    return Testing\Response::create($response->__invoke());
-                }
-
-                if ($response instanceof \GuzzleHttp\Promise\PromiseInterface) {
-                    return $response;
-                }
-
-                return Testing\Response::create();
-            };
-        });
-
-        return $recorder;
     }
 
     /**
@@ -161,14 +145,18 @@ class Client
      */
     public function getHttpClient()
     {
+        if ($this->httpClient) {
+            return $this->httpClient;
+        }
+
         foreach ($this->resolvedCallbacks as $callback) {
             call_user_func($callback, $this);
         }
 
-        return $this->httpClient ?: $this->httpClient = new GuzzleHttp([
+        return $this->httpClient = new GuzzleHttp([
             'http_errors' => false,
             'base_uri' => $this->baseUri,
-            'handler' => $this->getHandlerStack(),
+            'handler' => $this->buildHandlerStack(),
             'on_stats' => function ($stats) {
                 $this->transferStats = $stats;
             },
@@ -190,24 +178,18 @@ class Client
     /**
      * @return \GuzzleHttp\HandlerStack
      */
-    protected function getHandlerStack()
+    protected function buildHandlerStack()
     {
-        $stack = HandlerStack::create();
+        $this->handlerStack->push($this->buildRecorderHandler());
+        $this->handlerStack->push($this->buildFakerHandler());
+        $this->handlerStack->push(GuzzleMiddleware::mapResponse(function ($response) {
+            if ($response->getStatusCode() >= 400) {
+                throw new RequestException((new Response($response))->setTransferStats($this->transferStats));
+            }
 
-        if ($this->withExceptionHandling) {
-            $stack->push(GuzzleMiddleware::mapResponse(function ($response) {
-                if ($response->getStatusCode() >= 400) {
-                    throw new RequestException((new Response($response))->setTransferStats($this->transferStats));
-                }
+            return $response;
+        }));
 
-                return $response;
-            }));
-        }
-
-        foreach ($this->middleware->all() as $name => $middleware) {
-            $stack->push($middleware, $name);
-        }
-
-        return $stack;
+        return $this->handlerStack;
     }
 }

@@ -2,83 +2,117 @@
 
 namespace HttpClient\Testing;
 
-use function GuzzleHttp\Promise\promise_for;
-use GuzzleHttp\Psr7\Response;
+use Closure;
+use PHPUnit\Framework\Assert;
 
 trait FakesRequests
 {
     /**
      * @var array
      */
-    protected static $fakers = [];
+    protected $recorded = [];
 
-    /**
-     * @param callable $callback
-     *
-     * @return void
-     */
-    public static function fake($callback = null)
+    protected $fakeCallbacks = [];
+
+    public function fake($callback = null)
     {
+        if (is_array($callback)) {
+            foreach ($callback as $url => $callable) {
+                $this->fakeForUrl($url, $callable);
+            }
+
+            return $this;
+        }
+
         if (is_null($callback)) {
             $callback = function () {
-                return static::response();
+                return Response::create();
             };
         }
 
-        if (is_array($callback)) {
-            $callback = new ResponseSequence($callback);
-        }
+        $this->fakeCallbacks = array_merge($this->fakeCallbacks, [
+            $callback instanceof Closure ? $callback : function () use ($callback) {
+                return $callback;
+            },
+        ]);
 
-        array_push(static::$fakers, is_callable($callback) ? $callback : function () use ($callback) {
-            return $callback;
+        return $this;
+    }
+
+    protected function fakeForUrl($url, $callback)
+    {
+        $this->fake(function ($request) use ($url, $callback) {
+            if ($url === '*' || $request->getUri()->getHost() === $url) {
+                return $callback;
+            }
         });
     }
 
-    public static function faked()
-    {
-        return count(static::$fakers) > 0;
-    }
-
-    /**
-     * Create a psr response instance.
-     *
-     * @param array|string|null $body
-     * @param int               $status
-     * @param array             $headers
-     *
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public static function response($body = null, $status = 200, $headers = [])
-    {
-        if (is_array($body)) {
-            $body = json_encode($body);
-
-            $headers['Content-Type'] = 'application/json';
-        }
-
-        return promise_for(new Response($status, $headers, $body));
-    }
-
-    /**
-     * Build the faker handler
-     *
-     * @return \Closure
-     */
-    protected function fakerHandler()
+    public function buildFakerHandler()
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
-                $result = array_filter(array_map(function ($callback) use ($request, $options) {
+                $responses = array_filter(array_map(function ($callback) use ($request, $options) {
                     return $callback->__invoke($request, $options);
-                }, static::$fakers));
+                }, $this->fakeCallbacks));
 
-                if (count($result) === 0) {
+                if (empty($responses)) {
                     return $handler($request, $options);
                 }
-                // var_dump($result);die;
 
-                return $result[0];
+                foreach ($responses as $response) {
+                    break;
+                }
+
+                if (is_array($response)) {
+                    return Response::create($response);
+                }
+
+                return $response;
             };
         };
+    }
+
+    public function buildRecorderHandler()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                return $handler($request, $options)->then(function ($response) use ($request, $options) {
+                    array_push($this->recorded, [$request, $response]);
+
+                    return $response;
+                });
+            };
+        };
+    }
+
+    public function assertSent($callback)
+    {
+        Assert::assertTrue(
+            count($this->recorded($callback)) > 0, 'An expected request was not recorded.'
+        );
+
+        return $this;
+    }
+
+    /**
+     * Assert how many requests have been recorded.
+     *
+     * @param $count
+     *
+     * @return void
+     */
+    public function assertSentCount($count)
+    {
+        Assert::assertCount($count, $this->recorded);
+
+        return $this;
+    }
+
+    public function recorded($callback)
+    {
+        return array_filter($this->recorded, function ($record) use ($callback) {
+            return $callback(...$record);
+        });
     }
 }
