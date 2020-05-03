@@ -26,7 +26,7 @@ trait FakesRequests
 
         if (is_null($callback)) {
             $callback = function () {
-                return Response::create();
+                return Factory::response();
             };
         }
 
@@ -39,11 +39,22 @@ trait FakesRequests
         return $this;
     }
 
+    public function fakeSequence($url = '*')
+    {
+        $sequence = Factory::sequence();
+
+        $this->fake([$url => $sequence]);
+
+        return $sequence;
+    }
+
     protected function fakeForUrl($url, $callback)
     {
-        $this->fake(function ($request) use ($url, $callback) {
+        $this->fake(function ($request, $options) use ($url, $callback) {
             if ($url === '*' || $request->getUri()->getHost() === $url) {
-                return $callback;
+                return $callback instanceof Closure || $callback instanceof ResponseSequence
+                        ? $callback($request, $options)
+                        : $callback;
             }
         });
     }
@@ -65,7 +76,7 @@ trait FakesRequests
                 }
 
                 if (is_array($response)) {
-                    return Response::create($response);
+                    return Factory::response($response);
                 }
 
                 return $response;

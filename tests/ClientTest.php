@@ -88,11 +88,20 @@ class ClientTest extends TestCase
     public function testFakeUrls()
     {
         $clientA = (new Client)->fake([
-            'http-client.com' => \HttpClient\Testing\Response::create('test'),
-            '*' => \HttpClient\Testing\Response::create('fallback'),
+            'http-client.com' => \HttpClient\Testing\Factory::response('test'),
+            '*' => \HttpClient\Testing\Factory::response('fallback'),
         ]);
 
         $this->assertSame('test', $clientA->request('POST', 'http://http-client.com/foo')->body());
         $this->assertSame('fallback', $clientA->request('POST', 'http://example.com/foo')->body());
+    }
+
+    public function testSequences()
+    {
+        $client = (new Client);
+        $client->fakeSequence()->push('one')->push('two');
+
+        $this->assertSame('one', $client->request('POST', 'http://http-client.com/foo')->body());
+        $this->assertSame('two', $client->request('POST', 'http://http-client.com/bar')->body());
     }
 }
